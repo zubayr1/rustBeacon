@@ -10,9 +10,8 @@ mod nodes;
 
 
 
-fn run_nodes()
+fn run_nodes(arg: String)
 {
-    
     let start = Instant::now();
     let earlystop = Duration::new(1, 0);
 
@@ -55,7 +54,8 @@ fn run_nodes()
    loop
    {
         let ip_clone = ip_address.clone();
-        let future = nodes::initiate(ip_clone);
+        let arg_clone = arg.clone();
+        let future = nodes::initiate(ip_clone, arg_clone);
         block_on(future);
 
         let duration = start.elapsed();
@@ -99,7 +99,7 @@ fn main()
     }
     else 
     {
-        run_nodes();
+        run_nodes(args[2].clone());
     }
 
 
