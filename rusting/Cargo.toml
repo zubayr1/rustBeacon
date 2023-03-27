@@ -1,0 +1,22 @@
+[package]
+name = "rusting"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rand = "0.8.5"
+
+ecdsa = "0.16.1"
+
+schnorr_fun = "0.8.2"
+sha2 = "0.10"
+
+futures = "0.3"
+
+makiko = "0.2.1"
+
+ssh2 = "0.9.4"
+
+ssh = "0.1.4"
