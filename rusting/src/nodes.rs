@@ -107,10 +107,8 @@ fn handle_server(ip: String)
 
 
 
-pub async fn initiate(ip_address: Vec<String>, arg: String)
+pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String)
 {
-    // let id = 1;
-    let total: u128 = 4;
 
     let start = SystemTime::now();
 
@@ -118,7 +116,7 @@ pub async fn initiate(ip_address: Vec<String>, arg: String)
         .duration_since(UNIX_EPOCH)
         .expect("Time went backwards");
 
-    if since_the_epoch.as_millis()%total==arg.parse().unwrap()
+    if since_the_epoch.as_millis()%(arg_total.parse::<u128>().unwrap())==arg_id.parse::<u128>().unwrap()+1
     {
         for ip in ip_address
         {
