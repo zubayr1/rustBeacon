@@ -98,7 +98,7 @@ fn main()
     loop 
     {
         let utc: DateTime<Utc>  = Utc::now();
-
+        // make arg time
         let month = &args[4][0..2].to_string();
         let date = &args[4][2..4].to_string();
         let hour = &args[4][4..6].to_string();
