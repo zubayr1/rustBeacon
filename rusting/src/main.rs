@@ -4,6 +4,7 @@ use std::io::{ prelude::*, BufReader};
 use futures::executor::block_on;
 use std::time::{Duration, Instant};
 use std::env;
+use chrono::prelude::*;
 
 //import own files
 mod nodes;
@@ -93,6 +94,24 @@ fn main()
 
     println!("{}", args[1]);
         
+
+    loop 
+    {
+        let utc: DateTime<Utc>  = Utc::now();
+
+        let month = &args[4][0..2].to_string();
+        let date = &args[4][2..4].to_string();
+        let hour = &args[4][4..6].to_string();
+        let min = &args[4][6..8].to_string();
+        
+        if utc >= Utc.with_ymd_and_hms(2023, month.parse::<u32>().unwrap(), 
+        date.parse::<u32>().unwrap(), hour.parse::<u32>().unwrap(), min.parse::<u32>().unwrap(), 00).unwrap()
+        {
+            break;
+        }
+    }
+
+    println!("launched");
     
     if args[1].trim() == keys
     {
