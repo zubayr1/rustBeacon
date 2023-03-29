@@ -13,7 +13,7 @@ mod nodes;
 mod nodes_test;
 
 
-fn run_nodes(arg_id: String, arg_total: String, environment: String)
+fn run_nodes(arg_id: String, arg_total: String, environment: String, leader: String)
 {
     // let start = Instant::now();
     // let earlystop = Duration::new(1, 0);
@@ -66,7 +66,7 @@ fn run_nodes(arg_id: String, arg_total: String, environment: String)
             let handle1 = thread::spawn(move || {
             
     
-                let future = nodes::initiate(ip_clone, arg_id_clone, arg_total_clone, environment);
+                let future = nodes::initiate(ip_clone, arg_id_clone, arg_total_clone, environment, leader);
     
             
                 block_on(future);
@@ -92,7 +92,7 @@ fn run_nodes(arg_id: String, arg_total: String, environment: String)
         } 
         else 
         {
-            let future = nodes::initiate(ip_clone, arg_id_clone, arg_total_clone, environment);
+            let future = nodes::initiate(ip_clone, arg_id_clone, arg_total_clone, environment, leader);
     
             
             block_on(future);
@@ -158,7 +158,7 @@ fn main()
     }
     else 
     {
-        run_nodes(args[2].clone(), args[3].clone(), args[5].clone());
+        run_nodes(args[2].clone(), args[3].clone(), args[5].clone(), args[6].clone());
     }
 
 

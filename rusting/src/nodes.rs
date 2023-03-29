@@ -87,7 +87,7 @@ async fn handle_server() {
 
 
 
-pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String, environment: String)
+pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String, environment: String, leader: String)
 {
     
     // let start = SystemTime::now();
@@ -102,14 +102,11 @@ pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String
     {
         for ip in ip_address //LEADER SENDS TO EVERY IP
         {
-            if ip!="18.117.92.19"
+            if ip!=leader
             {
                 handle_client(ip, environment.clone()).await;
             }
-            else
-            {
-                handle_client(ip, "dev".to_string()).await;
-            }
+            
             
         }
 
