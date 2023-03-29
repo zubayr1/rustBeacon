@@ -107,6 +107,10 @@ pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String
             {
                 handle_client(ip, environment.clone()).await;
             }
+            else
+            {
+                handle_client(ip, "dev").await;
+            }
             
         }
 
