@@ -28,6 +28,7 @@ async fn match_tcp_client(address: String)
     stream.write_all(b"client hello!").await.unwrap();
     stream.write_all(b"client hello!").await.unwrap();
     stream.write_all(b"EOF").await.unwrap();
+    stream.write_all(b"client hello!").await.unwrap();
   //  stream.shutdown().await.unwrap();
    
 }
