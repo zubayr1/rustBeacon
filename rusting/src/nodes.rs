@@ -47,7 +47,7 @@ async fn handle_client(ip: String) //be leader
 #[tokio::main]
 async fn handle_server() {
     let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
-
+    println!("server");
     loop {
         let (mut socket, _) = listener.accept().await.unwrap();
         println!("continue");
