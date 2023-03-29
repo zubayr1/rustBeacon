@@ -1,20 +1,22 @@
 //imports
+use std::thread;
+
 use std::fs::File;
 use std::io::{ prelude::*, BufReader};
 use futures::executor::block_on;
-use std::time::{Duration, Instant};
-use std::env;
+// use std::time::{Duration, Instant};
+use std::env::{self};
 use chrono::prelude::*;
 
 //import own files
 mod nodes;
+mod nodes_test;
 
 
-
-fn run_nodes(arg_id: String, arg_total: String)
+fn run_nodes(arg_id: String, arg_total: String, environment: String)
 {
-    let start = Instant::now();
-    let earlystop = Duration::new(1, 0);
+    // let start = Instant::now();
+    // let earlystop = Duration::new(1, 0);
 
     let mut ids: Vec<String> = Vec::new();
     let mut ip_address: Vec<String> = Vec::new();
@@ -52,26 +54,59 @@ fn run_nodes(arg_id: String, arg_total: String)
     }
     
 
-   loop
-   {
+//    loop
+//    {
         let ip_clone = ip_address.clone();
         let arg_id_clone = arg_id.clone();
         let arg_total_clone = arg_total.clone();
-        let future = nodes::initiate(ip_clone, arg_id_clone, arg_total_clone);
-
         
-         block_on(future);
-         
-    
 
-        let duration = start.elapsed();
-
-
-        if duration>= earlystop
+        if environment=="dev"
         {
-            break;
+            let handle1 = thread::spawn(move || {
+            
+    
+                let future = nodes::initiate(ip_clone, arg_id_clone, arg_total_clone);
+    
+            
+                block_on(future);
+                
+        
+            });
+            let handle2 = thread::spawn(move || {
+                
+        
+                let future1 = nodes_test::initiate(arg_id, arg_total);
+    
+            
+                block_on(future1);
+                
+        
+            });
+                
+            
+            handle1.join().unwrap();
+                
+            
+            handle2.join().unwrap();
+        } 
+        else 
+        {
+            let future = nodes::initiate(ip_clone, arg_id_clone, arg_total_clone);
+    
+            
+            block_on(future);
         }
-   }
+         
+
+        // let duration = start.elapsed();
+
+
+        // if duration>= earlystop
+        // {
+        //     break;
+        // }
+   //}
     
 
 
@@ -123,7 +158,7 @@ fn main()
     }
     else 
     {
-        run_nodes(args[2].clone(), args[3].clone());
+        run_nodes(args[2].clone(), args[3].clone(), args[5].clone());
     }
 
 
