@@ -102,14 +102,13 @@ pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String
     {
         for ip in ip_address //LEADER SENDS TO EVERY IP
         {
-            println!("{}", ip);
             if ip!="18.117.92.19"
             {
                 handle_client(ip, environment.clone()).await;
             }
             else
             {
-                handle_client(ip, "dev").await;
+                handle_client(ip, "dev".to_string()).await;
             }
             
         }
