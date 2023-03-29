@@ -66,7 +66,7 @@ fn run_nodes(arg_id: String, arg_total: String, environment: String)
             let handle1 = thread::spawn(move || {
             
     
-                let future = nodes::initiate(ip_clone, arg_id_clone, arg_total_clone);
+                let future = nodes::initiate(ip_clone, arg_id_clone, arg_total_clone, environment);
     
             
                 block_on(future);
@@ -92,7 +92,7 @@ fn run_nodes(arg_id: String, arg_total: String, environment: String)
         } 
         else 
         {
-            let future = nodes::initiate(ip_clone, arg_id_clone, arg_total_clone);
+            let future = nodes::initiate(ip_clone, arg_id_clone, arg_total_clone, environment);
     
             
             block_on(future);

@@ -28,18 +28,18 @@ async fn handle_server() {
             // In a loop, read data from the socket and write the data back.
             loop {
                 
-                let bytes_read: usize = reader.read_line(&mut line).await.unwrap();
+                let _bytes_read: usize = reader.read_line(&mut line).await.unwrap();
 
-                println!("{}", bytes_read);
-                if bytes_read == 0 
+                
+                if line.contains("EOF")
                 {
                     break;
                 }
                 
-                writer.write_all(line.as_bytes()).await.unwrap();
-                line.clear();
                 
             }
+            println!("{}", line);
+
     }
 }
 

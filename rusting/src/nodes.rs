@@ -26,15 +26,26 @@ async fn match_tcp_client(address: String)
 
 
     stream.write_all(b"client hello!").await.unwrap();
+    stream.write_all(b"client hello!").await.unwrap();
+    stream.write_all(b"EOF").await.unwrap();
+    stream.shutdown().await.unwrap();
    
 }
 
 
 
-async fn handle_client(ip: String) //be leader
+async fn handle_client(ip: String, environment: String) //be leader
 {
-    
-    match_tcp_client([ip.to_string(), "8080".to_string()].join(":"));
+    if environment=="dev"
+    {
+        match_tcp_client(["127.0.0.1".to_string(), "8080".to_string()].join(":"));
+
+    }
+    else 
+    {
+        match_tcp_client([ip.to_string(), "8080".to_string()].join(":"));
+
+    }
        
     
 }
@@ -43,7 +54,7 @@ async fn handle_client(ip: String) //be leader
 
 #[tokio::main]
 async fn handle_server() {
-    let listener = TcpListener::bind("18.117.92.19:8080").await.unwrap();
+    let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
     println!("server");
     loop {
         let (mut socket, _) = listener.accept().await.unwrap();
@@ -54,27 +65,29 @@ async fn handle_server() {
             let mut reader: BufReader<ReadHalf> = BufReader::new(reader);
             let mut line: String  = String :: new();
             // In a loop, read data from the socket and write the data back.
+
             loop {
                 
-                let bytes_read: usize = reader.read_line(&mut line).await.unwrap();
+                let _bytes_read: usize = reader.read_line(&mut line).await.unwrap();
 
-                println!("{}", bytes_read);
-                if bytes_read == 0
+                
+                if line.contains("EOF")
                 {
                     break;
                 }
-
-                writer.write_all(line.as_bytes()).await.unwrap();
-                line.clear();
+                
                 
             }
+            println!("{}", line);
+
+            
     }
 }
 
 
 
 
-pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String)
+pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String, environment: String)
 {
     
     // let start = SystemTime::now();
@@ -89,7 +102,7 @@ pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String
     {
         for ip in ip_address //LEADER SENDS TO EVERY IP
         {
-            handle_client(ip).await;
+            handle_client(ip, environment.clone()).await;
         }
 
         
