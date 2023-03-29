@@ -134,7 +134,12 @@ pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String
         {
             let handler = thread::spawn( move || {
                 let ipclone = ip.clone();
-                handle_client(ipclone);             
+                   
+
+                if ip!="18.117.92.19"
+                {
+                    handle_client(ipclone);
+                }          
          
              });
 
@@ -151,8 +156,11 @@ pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String
 
             let handler = thread::spawn( move || {
 
+                if _ip!="18.117.92.19"
+                {
+                    handle_server();
+                }
                 
-                handle_server();
         
          
              });
