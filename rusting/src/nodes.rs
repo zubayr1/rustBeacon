@@ -108,16 +108,6 @@ fn handle_server()
 
 
 
-
-
-
-
-
-
-
-
-
-
 pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String)
 {
     
@@ -156,8 +146,7 @@ pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String
             let handler = thread::spawn( move || {
 
                 
-                //handle_server();
-                handle_client(_ip);
+                handle_server();
                 
         
          
