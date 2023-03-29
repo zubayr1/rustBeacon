@@ -14,7 +14,7 @@ use tokio::net::tcp::ReadHalf;
 
 #[tokio::main]
 async fn handle_server() {
-    let listener = TcpListener::bind("0.0.0.0:22").await.unwrap();
+    let listener = TcpListener::bind("0.0.0.0:8080").await.unwrap();
 
     println!("server");
     loop {

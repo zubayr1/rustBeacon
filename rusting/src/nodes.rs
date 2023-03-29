@@ -34,16 +34,16 @@ async fn match_tcp_client(address: String)
 
 
 
-async fn handle_client(ip: String, environment: String) //be leader
+async fn handle_client(ip: String, environment: String) //be leader: 1 instance
 {
     if environment=="dev"
     {
-        match_tcp_client(["127.0.0.1".to_string(), "22".to_string()].join(":"));
+        match_tcp_client(["127.0.0.1".to_string(), "8080".to_string()].join(":"));
 
     }
     else 
     {
-        match_tcp_client([ip.to_string(), "22".to_string()].join(":"));
+        match_tcp_client([ip.to_string(), "8080".to_string()].join(":"));
 
     }
        
@@ -52,9 +52,9 @@ async fn handle_client(ip: String, environment: String) //be leader
 
 
 
-#[tokio::main]
+#[tokio::main] //3 instances
 async fn handle_server() {
-    let listener = TcpListener::bind("0.0.0.0:22").await.unwrap();
+    let listener = TcpListener::bind("0.0.0.0:8080").await.unwrap();
     println!("server");
     loop {
         let (mut socket, _) = listener.accept().await.unwrap();
