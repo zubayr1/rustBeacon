@@ -1,8 +1,15 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 use std::thread;
-use std::net::{TcpListener, TcpStream, Shutdown};
+use std::net::{ TcpStream, Shutdown};
 use std::io::{Read, Write};
 use std::str::from_utf8;
+
+use tokio::net::TcpListener;
+use tokio::io::{AsyncReadExt, AsyncWriteExt, WriteHalf};
+use tokio::net::tcp::ReadHalf;
+
+
+
 
 pub fn create_keys()
 {
@@ -77,33 +84,28 @@ fn communicate_to_client(mut stream: TcpStream) {
 
 
 
-fn handle_server()
-{
-    let address = ["127.0.0.1".to_string(), "4422".to_string()].join(":");
-    println!("{}", address);
-    let listener = TcpListener::bind(address).unwrap();
-    // accept connections and process them, spawning a new thread for each one
-    for stream in listener.incoming() {
+#[tokio::main]
+async fn handle_server() {
+    let listener = TcpListener::bind("127.0.0.1:4422").await.unwrap();
 
-        match stream {
-            Ok(stream) => {
-                println!("New connection: {}", stream.peer_addr().unwrap());
-                thread::spawn(move|| {
-                    // connection succeeded
-                    communicate_to_client(stream)
-                });
+
+    loop {
+        let (mut socket, _) = listener.accept().await.unwrap();
+        println!("continue");
+        tokio::spawn(async move {
+            let mut buf = [0; 1024];
+
+           // let (reader: ReadHalf, writer: WriteHalf) = socket.split();
+
+            // In a loop, read data from the socket and write the data back.
+            loop {
+                
+
+                
             }
-            Err(e) => {
-                println!("Error: {}", e);
-                /* connection failed */
-            }
-        }
+        });
     }
-    // close the socket server
-    drop(listener);
-    return;
 }
-
 
 
 
@@ -111,7 +113,6 @@ fn handle_server()
 pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String)
 {
     
-
     let start = SystemTime::now();
 
     let since_the_epoch = start
@@ -128,13 +129,25 @@ pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String
 
                 
                 handle_client(ipclone);
-                          
+
+                                          
+         
+             });
+
+
+             let handler1 = thread::spawn( move || {
+                
+                  
+                #[warn(unused_must_use)]
+                handle_server();                          
          
              });
 
              
         
              handler.join().unwrap();
+
+             handler1.join().unwrap();
         }
     }
     else
