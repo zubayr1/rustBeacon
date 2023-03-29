@@ -3,7 +3,6 @@
 // use std::io::{Read, Write};
 // use std::str::from_utf8;
 // use futures::executor::block_on;
-use std::thread;
 
 use tokio::net::TcpListener;
 use tokio::net::TcpStream;
@@ -42,12 +41,9 @@ async fn handle_client(ip: String) //be leader
 
 
 
-
-
-
 #[tokio::main]
 async fn handle_server() {
-    let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
+    let listener = TcpListener::bind("18.117.92.19:8080").await.unwrap();
     println!("server");
     loop {
         let (mut socket, _) = listener.accept().await.unwrap();
