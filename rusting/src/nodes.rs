@@ -54,7 +54,7 @@ fn match_tcp_client(address: String)
 
 fn handle_client(ip: String) //be leader
 {
-    match_tcp_client([ip.to_string(), "4422".to_string()].join(":"));
+    match_tcp_client(["127.0.0.1".to_string(), "4422".to_string()].join(":"));
 }
 
 
