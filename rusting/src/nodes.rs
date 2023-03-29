@@ -47,7 +47,7 @@ fn match_tcp_client(address: String)
 
 fn handle_client(ip: String) //be leader
 {
-    match_tcp_client([ip, "4422".to_string()].join(":"));
+    match_tcp_client([ip.to_string(), "4422".to_string()].join(":"));
 }
 
 
@@ -77,9 +77,9 @@ fn communicate_to_client(mut stream: TcpStream) {
 
 
 
-fn handle_server(ip: String)
+fn handle_server()
 {
-    let address = ["0.0.0.0".to_string(), "4422".to_string()].join(":");
+    let address = ["127.0.0.1".to_string(), "4422".to_string()].join(":");
     println!("{}", address);
     let listener = TcpListener::bind(address).unwrap();
     // accept connections and process them, spawning a new thread for each one
@@ -107,8 +107,20 @@ fn handle_server(ip: String)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String)
 {
+    
 
     let start = SystemTime::now();
 
@@ -120,11 +132,9 @@ pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String
     {
         for ip in ip_address
         {
-            
             let handler = thread::spawn( move || {
-
-                handle_client(ip); 
-        
+                let ipclone = ip.clone();
+                handle_client(ipclone);             
          
              });
 
@@ -135,18 +145,22 @@ pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String
     }
     else
     {
-        for ip in ip_address
+        for _ip in ip_address
         {
+   
+
             let handler = thread::spawn( move || {
 
-                handle_server(ip); 
+                
+                handle_server();
         
          
              });
 
-            
+             
         
              handler.join().unwrap();
+
         }
     }
     

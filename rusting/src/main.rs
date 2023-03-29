@@ -58,7 +58,11 @@ fn run_nodes(arg_id: String, arg_total: String)
         let arg_id_clone = arg_id.clone();
         let arg_total_clone = arg_total.clone();
         let future = nodes::initiate(ip_clone, arg_id_clone, arg_total_clone);
-        block_on(future);
+
+        
+         block_on(future);
+         
+    
 
         let duration = start.elapsed();
 
