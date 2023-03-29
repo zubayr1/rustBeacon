@@ -3,6 +3,7 @@
 // use std::io::{Read, Write};
 // use std::str::from_utf8;
 // use futures::executor::block_on;
+use std::thread;
 
 use tokio::net::TcpListener;
 use tokio::net::TcpStream;
@@ -90,8 +91,10 @@ pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String
     // {
     if arg_id=="1" && (arg_id<arg_total)
     {
-        let ip = ip_address[0].clone(); //TAKE FIRST IP AS LEADER
-        handle_client(ip).await;
+        for ip in ip_address //LEADER SENDS TO EVERY IP
+        {
+            handle_client(ip).await;
+        }
 
         
     }
