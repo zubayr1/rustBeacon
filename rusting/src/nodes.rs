@@ -88,9 +88,9 @@ async fn handle_server() {
 
 
 
-pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String, environment: String, leader: String)
+pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 {
-    
+  //  arg_id: String, arg_total: String, environment: String, leader: String
     // let start = SystemTime::now();
 
     // let since_the_epoch = start
@@ -99,13 +99,13 @@ pub async fn initiate(ip_address: Vec<String>, arg_id: String, arg_total: String
 
     // if since_the_epoch.as_millis()%(arg_total.parse::<u128>().unwrap())==arg_id.parse::<u128>().unwrap()+1
     // {
-    if arg_id=="1" && (arg_id<arg_total)
+    if args[2]==args[7] && (args[2]<args[3])
     {
         for ip in ip_address //LEADER SENDS TO EVERY IP
         {
-            if ip!=leader
+            if ip!=args[6]
             {
-                handle_client(ip, environment.clone()).await;
+                handle_client(ip, args[5].clone()).await;
             }
             
             

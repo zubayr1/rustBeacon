@@ -13,7 +13,7 @@ mod nodes;
 mod nodes_test;
 
 
-fn run_nodes(arg_id: String, arg_total: String, environment: String, leader: String)
+fn run_nodes(args: Vec<String>)
 {
     // let start = Instant::now();
     // let earlystop = Duration::new(1, 0);
@@ -57,22 +57,25 @@ fn run_nodes(arg_id: String, arg_total: String, environment: String, leader: Str
 //    loop
 //    {
         let ip_clone = ip_address.clone();
-        let arg_id_clone = arg_id.clone();
-        let arg_total_clone = arg_total.clone();
+        
         
 
-        if environment=="dev"
+        if args[5]=="dev"
         {
+            let args_clone = args.clone();
             let handle1 = thread::spawn(move || {
             
     
-                let future = nodes::initiate(ip_clone, arg_id_clone, arg_total_clone, environment, leader);
+                let future = nodes::initiate(ip_clone, args_clone);
     
             
                 block_on(future);
                 
         
             });
+            let arg_id = args[2].clone();
+            let arg_total = args[3].clone();
+
             let handle2 = thread::spawn(move || {
                 
         
@@ -92,7 +95,7 @@ fn run_nodes(arg_id: String, arg_total: String, environment: String, leader: Str
         } 
         else 
         {
-            let future = nodes::initiate(ip_clone, arg_id_clone, arg_total_clone, environment, leader);
+            let future = nodes::initiate(ip_clone, args.clone());
     
             
             block_on(future);
@@ -158,7 +161,7 @@ fn main()
     }
     else 
     {
-        run_nodes(args[2].clone(), args[3].clone(), args[5].clone(), args[6].clone());
+        run_nodes(args.clone());
     }
 
 
