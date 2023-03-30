@@ -57,7 +57,7 @@ fn run_nodes(args: Vec<String>)
 //    loop
 //    {
         let ip_clone = ip_address.clone();
-        
+        let ip_clone_new = ip_address.clone();
         
 
         if args[5]=="dev"
@@ -73,13 +73,12 @@ fn run_nodes(args: Vec<String>)
                 
         
             });
-            let arg_id = args[2].clone();
-            let arg_total = args[3].clone();
+            let args_clone_new = args.clone();
 
             let handle2 = thread::spawn(move || {
                 
         
-                let future1 = nodes_test::initiate(arg_id, arg_total);
+                let future1 = nodes_test::initiate(ip_clone_new, args_clone_new);
     
             
                 block_on(future1);

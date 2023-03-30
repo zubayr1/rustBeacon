@@ -24,13 +24,14 @@ async fn match_tcp_client(address: String)
     println!("client");
     let mut stream = TcpStream::connect(address).await.unwrap();
 
+    let (reader, mut writer) = stream.split();
 
-    stream.write_all(b"client hello!").await.unwrap();
-    stream.write_all(b"client hello!").await.unwrap();
-    stream.write_all(b"EOF").await.unwrap();
-    stream.write_all(b"client hello!").await.unwrap();
-  //  stream.shutdown().await.unwrap();
-   
+    writer.write_all(b"client hello!").await.unwrap();
+    writer.write_all(b"client hello!").await.unwrap();
+    writer.write_all(b"EOF").await.unwrap();
+
+    
+    
 }
 
 
@@ -54,8 +55,9 @@ async fn handle_client(ip: String, environment: String) //be leader: 1 instance
 
 
 #[tokio::main] //3 instances
-async fn handle_server() {
+async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
     let listener = TcpListener::bind("0.0.0.0:8080").await.unwrap();
+
     println!("server");
     loop {
         let (mut socket, _) = listener.accept().await.unwrap();
@@ -66,7 +68,6 @@ async fn handle_server() {
             let mut reader: BufReader<ReadHalf> = BufReader::new(reader);
             let mut line: String  = String :: new();
             // In a loop, read data from the socket and write the data back.
-
             loop {
                 
                 let _bytes_read: usize = reader.read_line(&mut line).await.unwrap();
@@ -74,14 +75,30 @@ async fn handle_server() {
                 
                 if line.contains("EOF")
                 {
+                    println!("EOF Reached");
+                    writer.write_all(line.as_bytes()).await.unwrap();
+                    println!("{}", line);
+                    
+                    for ip in ip_address.clone() // Broadcast to everyone
+                    {
+                        if ip!=args[6]
+                        {
+                            handle_client(ip, args[5].clone()).await;
+                        }
+                        
+                        
+                    }
+
+
+                    line.clear();
+
                     break;
                 }
                 
                 
             }
-            println!("{}", line);
-
             
+
     }
 }
 
@@ -115,7 +132,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
     }
     else
     {
-       handle_server();
+       handle_server(ip_address, args);
 
     }
     

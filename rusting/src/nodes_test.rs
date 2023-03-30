@@ -5,15 +5,52 @@
 // use futures::executor::block_on;
 
 use tokio::net::TcpListener;
-// use tokio::net::TcpStream;
+use tokio::net::TcpStream;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use tokio::net::tcp::ReadHalf;
 
 
 
 
+
 #[tokio::main]
-async fn handle_server() {
+async fn match_tcp_client(address: String)
+{
+    println!("client");
+    let mut stream = TcpStream::connect(address).await.unwrap();
+
+    let (reader, mut writer) = stream.split();
+
+    writer.write_all(b"client hello!").await.unwrap();
+    writer.write_all(b"client hello!").await.unwrap();
+    writer.write_all(b"EOF").await.unwrap();
+
+    
+    
+}
+
+
+
+async fn handle_client(ip: String, environment: String) //be leader: 1 instance
+{
+    if environment=="dev"
+    {
+        match_tcp_client(["127.0.0.1".to_string(), "8080".to_string()].join(":"));
+
+    }
+    else 
+    {
+        match_tcp_client([ip.to_string(), "8080".to_string()].join(":"));
+
+    }
+       
+    
+}
+
+
+
+#[tokio::main]
+async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
     let listener = TcpListener::bind("0.0.0.0:8080").await.unwrap();
 
     println!("server");
@@ -33,12 +70,29 @@ async fn handle_server() {
                 
                 if line.contains("EOF")
                 {
+                    println!("EOF Reached");
+                    writer.write_all(line.as_bytes()).await.unwrap();
+                    println!("{}", line);
+                    
+                    for ip in ip_address.clone() // Broadcast to everyone
+                    {
+                        if ip!=args[6]
+                        {
+                            handle_client(ip, args[5].clone()).await;
+                        }
+                        
+                        
+                    }
+
+
+                    line.clear();
+
                     break;
                 }
                 
                 
             }
-            println!("{}", line);
+            
 
     }
 }
@@ -46,7 +100,7 @@ async fn handle_server() {
 
 
 
-pub async fn initiate(arg_id: String, arg_total: String)
+pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 {
     
     // let start = SystemTime::now();
@@ -57,9 +111,9 @@ pub async fn initiate(arg_id: String, arg_total: String)
 
     // if since_the_epoch.as_millis()%(arg_total.parse::<u128>().unwrap())==arg_id.parse::<u128>().unwrap()+1
     // {
-    if arg_id<arg_total
+    if args[2]<args[3]
     {
-        handle_server();
+        handle_server(ip_address, args);
 
         
     }
