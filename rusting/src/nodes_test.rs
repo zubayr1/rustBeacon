@@ -11,83 +11,71 @@ use tokio::net::tcp::ReadHalf;
 
 
 
-
-
-#[tokio::main]
-async fn match_tcp_client(address: String)
-{
-    println!("client");
-    let mut stream = TcpStream::connect(address).await.unwrap();
-
-    let (reader, mut writer) = stream.split();
-
-    writer.write_all(b"client hello!").await.unwrap();
-    writer.write_all(b"client hello!").await.unwrap();
-    writer.write_all(b"EOF").await.unwrap();
-
-    
-    
-}
-
-
-
-async fn handle_client(ip: String, environment: String) //be leader: 1 instance
-{
-    if environment=="dev"
-    {
-        match_tcp_client(["127.0.0.1".to_string(), "8080".to_string()].join(":"));
-
-    }
-    else 
-    {
-        match_tcp_client([ip.to_string(), "8080".to_string()].join(":"));
-
-    }
-       
-    
-}
-
-
-
 #[tokio::main]
 async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
     let listener = TcpListener::bind("0.0.0.0:8080").await.unwrap();
-
+    
     println!("server");
+    
+
     loop {
         let (mut socket, _) = listener.accept().await.unwrap();
         println!("continue");
 
-            let (reader, mut writer) = socket.split();
-           
-            let mut reader: BufReader<ReadHalf> = BufReader::new(reader);
-            let mut line: String  = String :: new();
-            // In a loop, read data from the socket and write the data back.
+        let arg_ip = args[6].clone();
+
+        let (reader, mut writer) = socket.split();
+        
+        let mut reader: BufReader<ReadHalf> = BufReader::new(reader);
+        let mut line: String  = String :: new();
+        // In a loop, read data from the socket and write the data back.
+        let ip_address_clone;
+        let line_clone;
             loop {
                 
                 let _bytes_read: usize = reader.read_line(&mut line).await.unwrap();
 
                 
+
                 if line.contains("EOF")
                 {
                     println!("EOF Reached");
                     writer.write_all(line.as_bytes()).await.unwrap();
                     println!("{}", line);
                     
-                    for ip in ip_address.clone() // Broadcast to everyone
-                    {
-                        if ip!=args[6]
-                        {
-                            handle_client(ip, args[5].clone()).await;
-                        }
-                        
-                        
-                    }
+                    ip_address_clone = ip_address.clone();
+                    
+                    line_clone = line.clone();
 
 
                     line.clear();
 
                     break;
+                }
+                
+                
+            }
+
+            for ip in ip_address_clone.clone() // Broadcast to everyone
+            {
+                if ip!=arg_ip.clone()
+                {
+                    let address;
+                    if args[5]=="dev"
+                    {
+                        address = ["127.0.0.1".to_string(), "8080".to_string()].join(":");
+                    }
+                    else 
+                    {
+                        address = [ip.to_string(), "8080".to_string()].join(":")
+                    }
+
+                    let mut stream = TcpStream::connect(address).await.unwrap();
+  
+   
+                    stream.write_all(line_clone.as_bytes()).await.unwrap();
+                    stream.write_all(b"EOF").await.unwrap();
+    
                 }
                 
                 
@@ -113,7 +101,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
     // {
     if args[2]<args[3]
     {
-        handle_server(ip_address, args);
+        handle_server(ip_address, args.clone());
 
         
     }
