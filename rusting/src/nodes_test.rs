@@ -17,6 +17,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
     
     println!("server");
     
+    let mut count =0;
 
     loop {
         let (mut socket, _) = listener.accept().await.unwrap();
@@ -56,30 +57,36 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
                 
             }
 
-            for ip in ip_address_clone.clone() // Broadcast to everyone
+            if count<=1
             {
-                if ip!=arg_ip.clone()
-                {
-                    let address;
-                    if args[5]=="dev"
+                for ip in ip_address_clone.clone() // Broadcast to everyone
+                {   
+                    if ip!=arg_ip.clone()
                     {
-                        address = ["127.0.0.1".to_string(), "8080".to_string()].join(":");
-                    }
-                    else 
-                    {
-                        address = [ip.to_string(), "8080".to_string()].join(":")
-                    }
-
-                    let mut stream = TcpStream::connect(address).await.unwrap();
-  
-   
-                    stream.write_all(line_clone.as_bytes()).await.unwrap();
-                    stream.write_all(b"EOF").await.unwrap();
+                        let address;
+                        if args[5]=="dev"
+                        {
+                            address = ["127.0.0.1".to_string(), "8080".to_string()].join(":");
+                        }
+                        else 
+                        {
+                            address = [ip.to_string(), "8080".to_string()].join(":")
+                        }
     
+                        let mut stream = TcpStream::connect(address).await.unwrap();
+                        
+                        let message = [line_clone.to_string(), "EOF".to_string()].join(" ");
+                        
+                        stream.write_all(message.as_bytes()).await.unwrap();
+    
+                            
+                    }                                
+                    
                 }
-                
-                
             }
+            
+            count+=1;                    
+            
             
 
     }
