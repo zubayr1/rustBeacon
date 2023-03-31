@@ -6,10 +6,12 @@ use tokio::net::tcp::ReadHalf;
 
 use schnorrkel::{Signature, PublicKey, signing_context};
 
+const INITIAL_PORT: u32 = 7081;
+
 
 #[tokio::main]
-async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
-    let listener = TcpListener::bind("0.0.0.0:7081").await.unwrap();
+async fn handle_server(ip_address: Vec<String>, args: Vec<String>, port: u32) {
+    let listener = TcpListener::bind(["0.0.0.0".to_string(), port.to_string()].join(":")).await.unwrap();
     
     println!("server");
     
@@ -90,11 +92,11 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
                                 let address;
                                 if args[5]=="dev"
                                 {
-                                    address = ["127.0.0.1".to_string(), "7081".to_string()].join(":");
+                                    address = ["127.0.0.1".to_string(), port.to_string()].join(":");
                                 }
                                 else 
                                 {
-                                    address = [ip.to_string(), "7081".to_string()].join(":")
+                                    address = [ip.to_string(), port.to_string()].join(":")
                                 }
             
                                 let mut stream = TcpStream::connect(address).await.unwrap();
@@ -127,11 +129,14 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
 pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 {
     let ip_address_clone = ip_address.clone();
+
+    let mut port_count = 0;
     for _index in 1..(args[7].parse::<i32>().unwrap()+1)
     {
+        port_count+=1;
         if args[2]<args[3]
         {
-            handle_server(ip_address_clone.clone(), args.clone());
+            handle_server(ip_address_clone.clone(), args.clone(), INITIAL_PORT+port_count);
     
             
         }

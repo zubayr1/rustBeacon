@@ -10,6 +10,7 @@ use rand::{rngs::OsRng};
 use schnorrkel::{Keypair,Signature, signing_context, PublicKey};
 use schnorrkel::{PUBLIC_KEY_LENGTH, SIGNATURE_LENGTH};
 
+const INITIAL_PORT: u32 = 7081;
 
 pub fn create_keys()
 {
@@ -111,16 +112,16 @@ async fn match_tcp_client(address: String, types: String)
 
 
 
-async fn handle_client(ip: String, environment: String, types: String) //be leader: 1 instance
+async fn handle_client(ip: String, environment: String, types: String, port: u32) //be leader: 1 instance
 {
     if environment=="dev"
     {
-        match_tcp_client(["127.0.0.1".to_string(), "7081".to_string()].join(":"), types);
+        match_tcp_client(["127.0.0.1".to_string(), port.to_string()].join(":"), types);
 
     }
     else 
     {
-        match_tcp_client([ip.to_string(), "7081".to_string()].join(":"), types);
+        match_tcp_client([ip.to_string(), port.to_string()].join(":"), types);
 
     }
        
@@ -130,8 +131,8 @@ async fn handle_client(ip: String, environment: String, types: String) //be lead
 
 
 #[tokio::main] //3 instances
-async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: String) {
-    let listener = TcpListener::bind("0.0.0.0:7081").await.unwrap();
+async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: String, port: u32) {
+    let listener = TcpListener::bind(["0.0.0.0".to_string(), port.to_string()].join(":")).await.unwrap();
     
     println!("server");
     
@@ -210,11 +211,11 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
                                 let address;
                                 if args[5]=="dev"
                                 {
-                                    address = ["127.0.0.1".to_string(), "7081".to_string()].join(":");
+                                    address = ["127.0.0.1".to_string(), port.to_string()].join(":");
                                 }
                                 else 
                                 {
-                                    address = [ip.to_string(), "7081".to_string()].join(":")
+                                    address = [ip.to_string(), port.to_string()].join(":")
                                 }
             
                                 let mut stream = TcpStream::connect(address).await.unwrap();
@@ -262,6 +263,8 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
     let mut count:usize = 0;
 
+    let mut port_count: u32 = 0;
+
     for _index in 1..(args[7].parse::<i32>().unwrap()+1)
     {
         round_robin_count+=1;
@@ -270,6 +273,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         let leader = ip_address_clone[count].clone();
 
         count+=1;
+        port_count+=1;
 
         if round_robin_count==args[2].parse::<i32>().unwrap()
         {
@@ -277,7 +281,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             {
                 if ip!=self_ip
                 {
-                    handle_client(ip, environment.clone(), "none".to_string()).await;
+                    handle_client(ip, environment.clone(), "none".to_string(), INITIAL_PORT+port_count).await;
                 }
                                 
             }
@@ -286,7 +290,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         }
         else
         {
-           handle_server(ip_address.clone(), args_clone.clone(), leader);
+           handle_server(ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count);
 
         }
 
