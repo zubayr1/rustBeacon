@@ -135,7 +135,7 @@ async fn handle_client(ip: String, environment: String, types: String) //be lead
 
 
 #[tokio::main] //3 instances
-async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
+async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: String) {
     let listener = TcpListener::bind("0.0.0.0:8080").await.unwrap();
     
     println!("server");
@@ -146,7 +146,6 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
         let (mut socket, _) = listener.accept().await.unwrap();
         println!("---continue---");
 
-        let arg_ip = args[6].clone();
 
         let (reader, mut writer) = socket.split();
         
@@ -213,7 +212,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
 
                         for ip in ip_address_clone.clone() // Broadcast to everyone
                         {   
-                            if ip!=arg_ip.clone()
+                            if ip!=leader.clone()
                             {
                                 let address;
                                 if args[5]=="dev"
@@ -276,12 +275,17 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
     let self_ip = args[6].clone();
 
-    for i in 1..(args[7].parse::<i32>().unwrap()+1)
+    let mut count:usize = 0;
+
+    for _index in 1..(args[7].parse::<i32>().unwrap()+1)
     {
         round_robin_count+=1;
         round_robin_count%=total.parse::<i32>().unwrap();
 
-        println!("{}", round_robin_count);
+        count+=1;
+
+        let leader = ip_address_clone[count].clone();
+
         if round_robin_count==args[2].parse::<i32>().unwrap()
         {
             for ip in ip_address_clone.clone() //LEADER SENDS TO EVERY IP
@@ -297,7 +301,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         }
         else
         {
-           handle_server(ip_address.clone(), args_clone.clone());
+           handle_server(ip_address.clone(), args_clone.clone(), leader);
 
         }
 
