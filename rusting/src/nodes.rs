@@ -213,8 +213,8 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
 
                         for ip in ip_address_clone.clone() // Broadcast to everyone
                         {   
-                            if ip!=arg_ip.clone()
-                            {
+                            // if ip!=arg_ip.clone()
+                            // {
                                 let address;
                                 if args[5]=="dev"
                                 {
@@ -232,7 +232,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
                                 stream.write_all(message.as_bytes()).await.unwrap();
             
                                     
-                            }                                
+                          //  }                                
                             
                         }
                     }
