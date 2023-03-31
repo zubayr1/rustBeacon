@@ -4,7 +4,7 @@ use std::thread;
 use std::fs::File;
 use std::io::{ prelude::*, BufReader};
 use futures::executor::block_on;
-// use std::time::{Duration, Instant};
+
 use std::env::{self};
 use chrono::prelude::*;
 
@@ -15,8 +15,7 @@ mod nodes_test;
 
 fn run_nodes(args: Vec<String>)
 {
-    // let start = Instant::now();
-    // let earlystop = Duration::new(1, 0);
+
 
     let mut ids: Vec<String> = Vec::new();
     let mut ip_address: Vec<String> = Vec::new();
@@ -95,16 +94,6 @@ fn run_nodes(args: Vec<String>)
             block_on(future);
         }
          
-
-        // let duration = start.elapsed();
-
-
-        // if duration>= earlystop
-        // {
-        //     break;
-        // }
-   //}
-    
 
 
     

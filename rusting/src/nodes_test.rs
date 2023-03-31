@@ -1,9 +1,3 @@
-// use std::time::{SystemTime, UNIX_EPOCH};
-// use std::thread;
-// use std::io::{Read, Write};
-// use std::str::from_utf8;
-// use futures::executor::block_on;
-
 
 use tokio::net::TcpListener;
 use tokio::net::TcpStream;
@@ -20,6 +14,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
     println!("server");
     
     let mut count =0;
+
 
     loop {
         let (mut socket, _) = listener.accept().await.unwrap();
@@ -68,9 +63,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
             {
                 let pubkeystr = line_collection[0];
                 let signstr = line_collection[1];
-    
-                // let text = line_collection[2];
-    
+        
     
                 let pubkeybytes: Vec<u8> = serde_json::from_str(pubkeystr).unwrap();
                 let signstrbytes: Vec<u8> = serde_json::from_str(signstr).unwrap();
@@ -122,7 +115,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
                 }
             }
 
-
+            
             
 
     }
@@ -133,24 +126,17 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
 
 pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 {
-    
-    // let start = SystemTime::now();
-
-    // let since_the_epoch = start
-    //     .duration_since(UNIX_EPOCH)
-    //     .expect("Time went backwards");
-
-    // if since_the_epoch.as_millis()%(arg_total.parse::<u128>().unwrap())==arg_id.parse::<u128>().unwrap()+1
-    // {
-    if args[2]<args[3]
+    let ip_address_clone = ip_address.clone();
+    for _index in 1..(args[7].parse::<i32>().unwrap()+1)
     {
-        handle_server(ip_address, args.clone());
-
-        
+        if args[2]<args[3]
+        {
+            handle_server(ip_address_clone.clone(), args.clone());
+    
+            
+        }
     }
     
     
-
     
-
 }
