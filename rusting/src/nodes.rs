@@ -263,25 +263,47 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
     // if since_the_epoch.as_millis()%(arg_total.parse::<u128>().unwrap())==arg_id.parse::<u128>().unwrap()+1
     // {
-    if args[2]==args[7] && (args[2]<args[3])
+    
+    let mut round_robin_count=0;
+
+    let total = args[3].clone();
+
+    let ip_address_clone = ip_address.clone();
+
+    let environment = args[5].clone();
+
+    let args_clone = args.clone();
+
+    let self_ip = args[6].clone();
+
+    for i in 1..(args[7].parse::<i32>().unwrap()+1)
     {
-        for ip in ip_address //LEADER SENDS TO EVERY IP
+        round_robin_count+=1;
+        round_robin_count%=total.parse::<i32>().unwrap();
+
+
+        if round_robin_count==i
         {
-            if ip!=args[6]
+            for ip in ip_address_clone.clone() //LEADER SENDS TO EVERY IP
             {
-                handle_client(ip, args[5].clone(), "none".to_string()).await;
+                if ip!=self_ip
+                {
+                    handle_client(ip, environment.clone(), "none".to_string()).await;
+                }
+                                
             }
+
             
-            
+        }
+        else
+        {
+           handle_server(ip_address.clone(), args_clone.clone());
+
         }
 
         
     }
-    else
-    {
-       handle_server(ip_address, args);
-
-    }
+    
     
 
     
