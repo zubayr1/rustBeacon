@@ -9,7 +9,7 @@ use schnorrkel::{Signature, PublicKey, signing_context};
 
 #[tokio::main]
 async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
-    let listener = TcpListener::bind("0.0.0.0:8080").await.unwrap();
+    let listener = TcpListener::bind("0.0.0.0:7081").await.unwrap();
     
     println!("server");
     
@@ -90,11 +90,11 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
                                 let address;
                                 if args[5]=="dev"
                                 {
-                                    address = ["127.0.0.1".to_string(), "8080".to_string()].join(":");
+                                    address = ["127.0.0.1".to_string(), "7081".to_string()].join(":");
                                 }
                                 else 
                                 {
-                                    address = [ip.to_string(), "8080".to_string()].join(":")
+                                    address = [ip.to_string(), "7081".to_string()].join(":")
                                 }
             
                                 let mut stream = TcpStream::connect(address).await.unwrap();

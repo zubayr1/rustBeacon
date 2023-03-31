@@ -115,12 +115,12 @@ async fn handle_client(ip: String, environment: String, types: String) //be lead
 {
     if environment=="dev"
     {
-        match_tcp_client(["127.0.0.1".to_string(), "8080".to_string()].join(":"), types);
+        match_tcp_client(["127.0.0.1".to_string(), "7081".to_string()].join(":"), types);
 
     }
     else 
     {
-        match_tcp_client([ip.to_string(), "8080".to_string()].join(":"), types);
+        match_tcp_client([ip.to_string(), "7081".to_string()].join(":"), types);
 
     }
        
@@ -131,7 +131,7 @@ async fn handle_client(ip: String, environment: String, types: String) //be lead
 
 #[tokio::main] //3 instances
 async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: String) {
-    let listener = TcpListener::bind("0.0.0.0:8080").await.unwrap();
+    let listener = TcpListener::bind("0.0.0.0:7081").await.unwrap();
     
     println!("server");
     
@@ -210,11 +210,11 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
                                 let address;
                                 if args[5]=="dev"
                                 {
-                                    address = ["127.0.0.1".to_string(), "8080".to_string()].join(":");
+                                    address = ["127.0.0.1".to_string(), "7081".to_string()].join(":");
                                 }
                                 else 
                                 {
-                                    address = [ip.to_string(), "8080".to_string()].join(":")
+                                    address = [ip.to_string(), "7081".to_string()].join(":")
                                 }
             
                                 let mut stream = TcpStream::connect(address).await.unwrap();
