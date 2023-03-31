@@ -116,6 +116,10 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
                         }
                     }
                 }
+                else 
+                {
+                    println!("Identity Verification Failed. Aborting Broadcasting...");
+                }
             }
 
 
