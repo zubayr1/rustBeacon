@@ -281,8 +281,8 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         round_robin_count+=1;
         round_robin_count%=total.parse::<i32>().unwrap();
 
-
-        if round_robin_count==i
+        println!("{}", round_robin_count);
+        if round_robin_count==args[2].parse::<i32>().unwrap()
         {
             for ip in ip_address_clone.clone() //LEADER SENDS TO EVERY IP
             {
