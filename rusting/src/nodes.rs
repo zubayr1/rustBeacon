@@ -105,42 +105,10 @@ async fn match_tcp_client(address: String, types: String)
     else 
     {
         stream.write_all(types.as_bytes()).await.unwrap();
+        stream.write_all(types.as_bytes()).await.unwrap();
         stream.write_all(b"EOF").await.unwrap();
     }
     
-    let listener = TcpListener::bind("0.0.0.0:8080").await.unwrap();
-
-    let (mut socket, _) = listener.accept().await.unwrap();
-        println!("---continue---");
-
-
-        let (reader, mut writer) = socket.split();
-        
-        let mut reader: BufReader<ReadHalf> = BufReader::new(reader);
-        let mut line: String  = String :: new();
-        
-
-        loop {
-                
-                let _bytes_read: usize = reader.read_line(&mut line).await.unwrap();
-                
-                                
-                if line.contains("EOF")
-                {
-                    println!("EOF Reached");
-                    writer.write_all(line.as_bytes()).await.unwrap();
-                    println!("{}", line);
-                    
-
-                    line.clear();
-
-                    break;
-                }
-                
-                
-            }
-
-
 
     
     
@@ -156,7 +124,7 @@ async fn handle_client(ip: String, environment: String, types: String) //be lead
 
     }
     else 
-    {        
+    {
         match_tcp_client([ip.to_string(), "8080".to_string()].join(":"), types);
 
     }
@@ -178,6 +146,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
         let (mut socket, _) = listener.accept().await.unwrap();
         println!("---continue---");
 
+        let arg_ip = args[6].clone();
 
         let (reader, mut writer) = socket.split();
         
@@ -244,8 +213,8 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
 
                         for ip in ip_address_clone.clone() // Broadcast to everyone
                         {   
-                            // if ip!=arg_ip.clone()
-                            // {
+                            if ip!=arg_ip.clone()
+                            {
                                 let address;
                                 if args[5]=="dev"
                                 {
@@ -263,7 +232,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>) {
                                 stream.write_all(message.as_bytes()).await.unwrap();
             
                                     
-                          //  }                                
+                            }                                
                             
                         }
                     }
