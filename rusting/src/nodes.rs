@@ -125,6 +125,8 @@ async fn handle_client(ip: String, environment: String, types: String) //be lead
     }
     else 
     {
+        let listener = TcpListener::bind("0.0.0.0:8080").await.unwrap();
+        
         match_tcp_client([ip.to_string(), "8080".to_string()].join(":"), types);
 
     }
