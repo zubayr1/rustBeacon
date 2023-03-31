@@ -212,7 +212,8 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
 
                         for ip in ip_address_clone.clone() // Broadcast to everyone
                         {   
-                            if ip!=leader.clone()
+                            println!("{}", leader);
+                            if ip!=leader.clone() 
                             {
                                 let address;
                                 if args[5]=="dev"
