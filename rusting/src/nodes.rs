@@ -212,7 +212,6 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
 
                         for ip in ip_address_clone.clone() // Broadcast to everyone
                         {   
-                            println!("{}", leader);
                             if ip!=leader.clone() 
                             {
                                 let address;
@@ -281,11 +280,11 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
     for _index in 1..(args[7].parse::<i32>().unwrap()+1)
     {
         round_robin_count+=1;
-        round_robin_count%=total.parse::<i32>().unwrap();
-
-        count+=1;
+        round_robin_count%=total.parse::<i32>().unwrap();       
 
         let leader = ip_address_clone[count].clone();
+
+        count+=1;
 
         if round_robin_count==args[2].parse::<i32>().unwrap()
         {
