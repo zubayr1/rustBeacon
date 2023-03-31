@@ -11,12 +11,15 @@ const INITIAL_PORT: u32 = 7081;
 
 #[tokio::main]
 async fn handle_server(ip_address: Vec<String>, args: Vec<String>, port: u32) {
-    let listener = TcpListener::bind(["0.0.0.0".to_string(), port.to_string()].join(":")).await.unwrap();
+
+    println!("server at port {}", port);
+
+    let listener = TcpListener::bind(["0.0.0.0".to_string(), port.to_string()].join(":")).await.unwrap();  
     
-    println!("server");
     
     let mut count =0;
 
+    let mut messageperepochcount = 0;
 
     loop {
         let (mut socket, _) = listener.accept().await.unwrap();
@@ -117,7 +120,12 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, port: u32) {
                 }
             }
 
-            
+            messageperepochcount+=1;
+
+            if messageperepochcount>=4
+            {
+                break;
+            }
             
 
     }
@@ -133,6 +141,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
     let mut port_count = 0;
     for _index in 1..(args[7].parse::<i32>().unwrap()+1)
     {
+        println!("nkjn");
         port_count+=1;
         if args[2]<args[3]
         {

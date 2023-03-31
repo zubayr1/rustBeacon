@@ -138,6 +138,8 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
     
     let mut count =0;
 
+    let mut messageperepochcount = 0;
+
     loop {
         let (mut socket, _) = listener.accept().await.unwrap();
         println!("---continue---");
@@ -236,7 +238,12 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
                 }
             }
 
+            messageperepochcount+=1;
 
+            if messageperepochcount>=4
+            {
+                break;
+            }
             
 
     }
