@@ -20,7 +20,6 @@ fn run_nodes(args: Vec<String>)
 
     let mut ids: Vec<String> = Vec::new();
     let mut ip_address: Vec<String> = Vec::new();
-    let mut pubkeys: Vec<String> = Vec::new();
 
     let nodesfile = File::open("./nodes_information.txt").expect("cant open the file");
     let reader = BufReader::new(nodesfile);
@@ -44,11 +43,7 @@ fn run_nodes(args: Vec<String>)
                 ip_address.push(db.to_string());
             }
 
-            if count==3
-            {
-                pubkeys.push(db.to_string());
-                count=0;
-            }
+            
             
       }
     }
