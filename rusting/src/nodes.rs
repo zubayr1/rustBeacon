@@ -90,6 +90,8 @@ async fn match_tcp_client(address: String, types: String)
 
 
     let mut stream = TcpStream::connect(address).await.unwrap();
+
+    println!("connection done");
     
     if types == "none"
     {   
