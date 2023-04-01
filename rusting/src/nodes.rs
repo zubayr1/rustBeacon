@@ -90,7 +90,7 @@ async fn match_tcp_client(address: String, types: String)
 
 
     let mut stream = TcpStream::connect(address).await.unwrap();
-
+    
     if types == "none"
     {   
 
@@ -253,8 +253,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
 
 
 pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
-{
-  
+{  
     
     let mut round_robin_count=0;
 
@@ -274,8 +273,8 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
     for _index in 1..(args[7].parse::<i32>().unwrap()+1)
     {
-        println!("epoch: {}", _index);
-
+        println!("epoch : {}", _index);
+        
         round_robin_count+=1;
         round_robin_count%=total.parse::<i32>().unwrap();       
 
@@ -283,6 +282,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
         count+=1;
         port_count+=1;
+
 
         if round_robin_count==args[2].parse::<i32>().unwrap()
         {

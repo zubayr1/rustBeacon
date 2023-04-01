@@ -14,8 +14,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, port: u32) {
 
     println!("server at port {}", port);
 
-    let listener = TcpListener::bind(["0.0.0.0".to_string(), port.to_string()].join(":")).await.unwrap();  
-    println!("server ddd");
+    let listener = TcpListener::bind(["127.0.0.1".to_string(), port.to_string()].join(":")).await.unwrap();  
 
     let mut count =0;
 
@@ -141,7 +140,6 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
     let mut port_count = 0;
     for _index in 1..(args[7].parse::<i32>().unwrap()+1)
     {
-        println!("epoch: {}", _index);
         port_count+=1;
         if args[2]<args[3]
         {
@@ -149,6 +147,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
     
             
         }
+        
     }
     
     
