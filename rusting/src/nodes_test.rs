@@ -15,8 +15,8 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, port: u32) {
     println!("server at port {}", port);
 
     let listener = TcpListener::bind(["0.0.0.0".to_string(), port.to_string()].join(":")).await.unwrap();  
-    
-    
+    println!("server ddd");
+
     let mut count =0;
 
     let mut messageperepochcount = 0;
@@ -122,7 +122,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, port: u32) {
 
             messageperepochcount+=1;
 
-            if messageperepochcount>=4
+            if messageperepochcount>=args[3].clone().parse::<i32>().unwrap()
             {
                 break;
             }
@@ -141,7 +141,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
     let mut port_count = 0;
     for _index in 1..(args[7].parse::<i32>().unwrap()+1)
     {
-        println!("nkjn");
+        println!("epoch: {}", _index);
         port_count+=1;
         if args[2]<args[3]
         {

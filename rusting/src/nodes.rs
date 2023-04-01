@@ -240,7 +240,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
 
             messageperepochcount+=1;
 
-            if messageperepochcount>=4
+            if messageperepochcount>=args[3].clone().parse::<i32>().unwrap()
             {
                 break;
             }
@@ -274,6 +274,8 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
     for _index in 1..(args[7].parse::<i32>().unwrap()+1)
     {
+        println!("epoch: {}", _index);
+
         round_robin_count+=1;
         round_robin_count%=total.parse::<i32>().unwrap();       
 
