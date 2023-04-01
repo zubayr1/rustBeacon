@@ -134,7 +134,7 @@ async fn handle_client(ip: String, environment: String, types: String, port: u32
 async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: String, port: u32) {
     let listener = TcpListener::bind(["0.0.0.0".to_string(), port.to_string()].join(":")).await.unwrap();
     
-    println!("server");
+    println!("server at port {}", port);
     
     let mut count =0;
 
