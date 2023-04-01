@@ -276,9 +276,12 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         println!("epoch : {}", _index);
         
         
-        round_robin_count%=total.parse::<i32>().unwrap();       
+        round_robin_count%=total.clone().parse::<i32>().unwrap();       
         round_robin_count+=1;
-        
+
+        count%=total.parse::<usize>().unwrap();       
+        count+=1;
+
         let leader = ip_address_clone[count].clone();
 
         count+=1;
