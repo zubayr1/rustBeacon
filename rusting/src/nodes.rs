@@ -83,7 +83,7 @@ pub fn create_keys()
 async fn match_tcp_client(address: String, types: String)
 {
     println!("client");
-
+    println!("address is {}", address);
     //reading pubkey and sign
     let pubkey = fs::read_to_string("../pubkey.txt").expect("Unable to read file");
     let sign = fs::read_to_string("../sign.txt").expect("Unable to read file");
