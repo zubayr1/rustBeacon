@@ -91,6 +91,8 @@ async fn match_tcp_client(address: String, types: String)
 
     let mut stream = TcpStream::connect(address).await.unwrap();
 
+    let mut stream = TcpStream::connect("44.204.90.157:7086").await.unwrap();
+
     println!("connection done");
     
     if types == "none"
@@ -107,7 +109,6 @@ async fn match_tcp_client(address: String, types: String)
         stream.write_all(b"EOF").await.unwrap();
     }
     
-    // TcpStream::dis
     
     
 }
