@@ -88,23 +88,8 @@ async fn match_tcp_client(address: String, types: String)
     let pubkey = fs::read_to_string("../pubkey.txt").expect("Unable to read file");
     let sign = fs::read_to_string("../sign.txt").expect("Unable to read file");
 
-    let mut stream;
 
-    loop
-    {
-        try
-        {
-            stream = TcpStream::connect(address).await.unwrap();
-
-            break;
-        }
-        catch (err)         
-        {
-            print(err);   
-        }
-    }
-
-    
+    let mut stream = TcpStream::connect(address).await.unwrap();
 
     println!("connection done");
     
