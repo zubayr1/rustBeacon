@@ -88,24 +88,33 @@ async fn match_tcp_client(address: String, types: String)
     let pubkey = fs::read_to_string("../pubkey.txt").expect("Unable to read file");
     let sign = fs::read_to_string("../sign.txt").expect("Unable to read file");
 
+    loop {
+        let address_clone = address.clone();
+        if TcpStream::connect(address_clone.clone()).await.is_ok()
+        {
+            let mut stream = TcpStream::connect(address_clone.clone()).await.unwrap();
 
-    let mut stream = TcpStream::connect(address).await.unwrap();
+            println!("connection done");
+            
+            if types == "none"
+            {   
+        
+                stream.write_all(pubkey.as_bytes()).await.unwrap();
+                stream.write_all(sign.as_bytes()).await.unwrap();
+                stream.write_all(b"messageEOF").await.unwrap();
+            }
+            else 
+            {
+                stream.write_all(types.as_bytes()).await.unwrap();
+                stream.write_all(types.as_bytes()).await.unwrap();
+                stream.write_all(b"EOF").await.unwrap();
+            }
 
-    println!("connection done");
+            break;
+        }
+    }
+
     
-    if types == "none"
-    {   
-
-        stream.write_all(pubkey.as_bytes()).await.unwrap();
-        stream.write_all(sign.as_bytes()).await.unwrap();
-        stream.write_all(b"messageEOF").await.unwrap();
-    }
-    else 
-    {
-        stream.write_all(types.as_bytes()).await.unwrap();
-        stream.write_all(types.as_bytes()).await.unwrap();
-        stream.write_all(b"EOF").await.unwrap();
-    }
     
     
     
