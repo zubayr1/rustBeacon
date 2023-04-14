@@ -168,7 +168,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
         loop {
                 
                 let _bytes_read: usize = reader.read_line(&mut line).await.unwrap();
-                println!("random");
+                println!("{}", line);
                                 
                 if line.contains("EOF")
                 {
