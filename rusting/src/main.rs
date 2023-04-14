@@ -48,8 +48,7 @@ fn run_nodes(args: Vec<String>)
     }
     
 
-//    loop
-//    {
+
         let ip_clone = ip_address.clone();
         let ip_clone_new = ip_address.clone();
         

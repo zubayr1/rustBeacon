@@ -88,33 +88,24 @@ async fn match_tcp_client(address: String, types: String)
     let pubkey = fs::read_to_string("../pubkey.txt").expect("Unable to read file");
     let sign = fs::read_to_string("../sign.txt").expect("Unable to read file");
 
-    loop {
-        let address_clone = address.clone();
-        if TcpStream::connect(address_clone.clone()).await.is_ok()
-        {
-            let mut stream = TcpStream::connect(address_clone.clone()).await.unwrap();
 
-            println!("connection done");
-            
-            if types == "none"
-            {   
-        
-                stream.write_all(pubkey.as_bytes()).await.unwrap();
-                stream.write_all(sign.as_bytes()).await.unwrap();
-                stream.write_all(b"messageEOF").await.unwrap();
-            }
-            else 
-            {
-                stream.write_all(types.as_bytes()).await.unwrap();
-                stream.write_all(types.as_bytes()).await.unwrap();
-                stream.write_all(b"EOF").await.unwrap();
-            }
+    let mut stream = TcpStream::connect(address).await.unwrap();
 
-            break;
-        }
-    }
-
+    println!("connection done");
     
+    if types == "none"
+    {   
+
+        stream.write_all(pubkey.as_bytes()).await.unwrap();
+        stream.write_all(sign.as_bytes()).await.unwrap();
+        stream.write_all(b"messageEOF").await.unwrap();
+    }
+    else 
+    {
+        stream.write_all(types.as_bytes()).await.unwrap();
+        stream.write_all(types.as_bytes()).await.unwrap();
+        stream.write_all(b"EOF").await.unwrap();
+    }
     
     
     
@@ -122,19 +113,9 @@ async fn match_tcp_client(address: String, types: String)
 
 
 
-async fn handle_client(ip: String, environment: String, types: String, port: u32) //be leader: 1 instance
+async fn handle_client(ip: String, types: String, port: u32) //be leader: 1 instance
 {
-    if environment=="dev"
-    {
-        match_tcp_client(["127.0.0.1".to_string(), port.to_string()].join(":"), types);
-
-    }
-    else 
-    {
-        match_tcp_client([ip.to_string(), port.to_string()].join(":"), types);
-
-    }
-       
+    match_tcp_client([ip.to_string(), port.to_string()].join(":"), types);       
     
 }
 
@@ -168,7 +149,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
         loop {
                 
                 let _bytes_read: usize = reader.read_line(&mut line).await.unwrap();
-                println!("{}", line);
+                
                                 
                 if line.contains("EOF")
                 {
@@ -271,7 +252,6 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
     let ip_address_clone = ip_address.clone();
 
-    let environment = args[5].clone();
 
     let args_clone = args.clone();
 
@@ -299,14 +279,22 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
         if round_robin_count==args[2].parse::<i32>().unwrap()
         {
-            for ip in ip_address_clone.clone() //LEADER SENDS TO EVERY IP
+            if args[5]=="prod"
             {
-                if ip!=self_ip
+                for ip in ip_address_clone.clone() //LEADER SENDS TO EVERY IP
                 {
-                    handle_client(ip, environment.clone(), "none".to_string(), INITIAL_PORT+port_count).await;
+                    if ip!=self_ip
+                    {
+                        handle_client(ip,  "none".to_string(), INITIAL_PORT+port_count).await;
+                    }
+                                    
                 }
-                                
             }
+            else 
+            {
+                handle_client("127.0.0.1".to_string(),  "none".to_string(), INITIAL_PORT+port_count).await;
+            }
+            
 
             
         }
