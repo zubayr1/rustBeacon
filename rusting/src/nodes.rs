@@ -3,9 +3,8 @@ use tokio::net::TcpListener;
 use tokio::net::TcpStream;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use tokio::net::tcp::ReadHalf;
-
+use std::{thread, time};
 use std::fs;
-use std::ptr::null;
 
 use rand::{rngs::OsRng};
 use schnorrkel::{Keypair,Signature, signing_context, PublicKey};
@@ -92,7 +91,6 @@ async fn match_tcp_client(address: String, types: String)
 
     let mut stream = TcpStream::connect(address).await.unwrap();
 
-    
     println!("connection done");
     
     if types == "none"
@@ -124,8 +122,8 @@ async fn handle_client(ip: String, types: String, port: u32) //be leader: 1 inst
 
 
 #[tokio::main] //3 instances
-async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: String, port: u32, listener: TcpListener) {
-    
+async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: String, port: u32) {
+    let listener = TcpListener::bind(["0.0.0.0".to_string(), port.to_string()].join(":")).await.unwrap();
     
     println!("server at port {}", port);
     
@@ -261,9 +259,8 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
     let mut count:usize = 0;
 
-    let mut port_count: u32 = 1;
+    let mut port_count: u32 = 0;
 
-    
     for _index in 1..(args[7].parse::<i32>().unwrap()+1)
     {
         println!("epoch : {}", _index);
@@ -277,7 +274,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         let leader = ip_address_clone[count].clone();
 
         count+=1;
-        
+        port_count+=1;
 
 
         if args[5]=="prod"
@@ -286,10 +283,12 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             if round_robin_count==args[2].parse::<i32>().unwrap()
             {
                 for ip in ip_address_clone.clone() //LEADER SENDS TO EVERY IP
-                {                    
-
+                {
                     if ip!=self_ip
                     {
+                        let ten_millis = time::Duration::from_millis(10);
+                        thread::sleep(ten_millis);
+                        
                         handle_client(ip,  "none".to_string(), INITIAL_PORT+port_count).await;
                     }
                                     
@@ -298,9 +297,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             }
             else
             {
-                let listener = TcpListener::bind(["0.0.0.0".to_string(), port_count.to_string()].join(":")).await.unwrap();
-                
-                handle_server(ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count, listener);
+                handle_server(ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count);
 
             }
 
