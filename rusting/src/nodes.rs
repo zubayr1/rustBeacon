@@ -91,6 +91,7 @@ async fn match_tcp_client(address: String, types: String)
 
     let mut stream = TcpStream::connect(address).await.unwrap();
 
+    
     println!("connection done");
     
     if types == "none"
@@ -274,7 +275,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         let leader = ip_address_clone[count].clone();
 
         count+=1;
-        port_count+=1;
+        
 
 
         if args[5]=="prod"
@@ -284,6 +285,8 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             {
                 for ip in ip_address_clone.clone() //LEADER SENDS TO EVERY IP
                 {
+                    port_count+=1;
+                    
                     if ip!=self_ip
                     {
                         handle_client(ip,  "none".to_string(), INITIAL_PORT+port_count).await;
