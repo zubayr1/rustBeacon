@@ -107,15 +107,15 @@ async fn match_tcp_client(address: String, types: String)
         stream.write_all(b"EOF").await.unwrap();
     }
     
-    
+        
     
 }
 
 
 
 async fn handle_client(ip: String, types: String, port: u32) //be leader: 1 instance
-{
-    match_tcp_client([ip.to_string(), port.to_string()].join(":"), types);       
+{    
+    match_tcp_client([ip.to_string(), port.to_string()].join(":"), types);   
     
 }
 
@@ -277,9 +277,10 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         port_count+=1;
 
 
-        if round_robin_count==args[2].parse::<i32>().unwrap()
+        if args[5]=="prod"
         {
-            if args[5]=="prod"
+
+            if round_robin_count==args[2].parse::<i32>().unwrap()
             {
                 for ip in ip_address_clone.clone() //LEADER SENDS TO EVERY IP
                 {
@@ -289,20 +290,22 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                     }
                                     
                 }
+                
             }
-            else 
+            else
             {
-                handle_client("127.0.0.1".to_string(),  "none".to_string(), INITIAL_PORT+port_count).await;
+                handle_server(ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count);
+
             }
-            
 
             
         }
-        else
-        {
-           handle_server(ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count);
-
+        else 
+        {                
+            handle_client("127.0.0.1".to_string(),  "none".to_string(), INITIAL_PORT+port_count).await;
         }
+
+
 
         
     }
