@@ -260,7 +260,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
     let mut count:usize = 0;
 
-    let mut port_count: u32 = 0;
+    let mut port_count: u32 = 1;
 
     for _index in 1..(args[7].parse::<i32>().unwrap()+1)
     {
@@ -284,9 +284,8 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             if round_robin_count==args[2].parse::<i32>().unwrap()
             {
                 for ip in ip_address_clone.clone() //LEADER SENDS TO EVERY IP
-                {
-                    port_count+=1;
-                    
+                {                    
+
                     if ip!=self_ip
                     {
                         handle_client(ip,  "none".to_string(), INITIAL_PORT+port_count).await;
