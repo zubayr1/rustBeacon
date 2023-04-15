@@ -286,9 +286,9 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                 {
                     if ip!=self_ip
                     {
-                        let ten_millis = time::Duration::from_millis(10);
-                        thread::sleep(ten_millis);
-                        
+                        let five_millis = time::Duration::from_millis(5);
+                        thread::sleep(five_millis);
+
                         handle_client(ip,  "none".to_string(), INITIAL_PORT+port_count).await;
                     }
                                     
