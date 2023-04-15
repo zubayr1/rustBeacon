@@ -5,6 +5,7 @@ use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use tokio::net::tcp::ReadHalf;
 
 use std::fs;
+use std::ptr::null;
 
 use rand::{rngs::OsRng};
 use schnorrkel::{Keypair,Signature, signing_context, PublicKey};
@@ -123,8 +124,8 @@ async fn handle_client(ip: String, types: String, port: u32) //be leader: 1 inst
 
 
 #[tokio::main] //3 instances
-async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: String, port: u32) {
-    let listener = TcpListener::bind(["0.0.0.0".to_string(), port.to_string()].join(":")).await.unwrap();
+async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: String, port: u32, listener: TcpListener) {
+    
     
     println!("server at port {}", port);
     
@@ -262,6 +263,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
     let mut port_count: u32 = 1;
 
+    
     for _index in 1..(args[7].parse::<i32>().unwrap()+1)
     {
         println!("epoch : {}", _index);
@@ -296,7 +298,9 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             }
             else
             {
-                handle_server(ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count);
+                let listener = TcpListener::bind(["0.0.0.0".to_string(), port_count.to_string()].join(":")).await.unwrap();
+                
+                handle_server(ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count, listener);
 
             }
 
