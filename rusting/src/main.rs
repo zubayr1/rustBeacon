@@ -1,12 +1,13 @@
 //imports
 use std::thread;
-
 use std::fs::File;
+
 use std::io::{ prelude::*, BufReader};
 use futures::executor::block_on;
 
 use std::env::{self};
 use chrono::prelude::*;
+
 
 //import own files
 mod nodes;
@@ -16,6 +17,7 @@ mod nodes_test;
 fn run_nodes(args: Vec<String>)
 {
 
+    let _file = File::create("output.log");
 
     let mut ids: Vec<String> = Vec::new();
     let mut ip_address: Vec<String> = Vec::new();
@@ -51,7 +53,8 @@ fn run_nodes(args: Vec<String>)
 
         let ip_clone = ip_address.clone();
         let ip_clone_new = ip_address.clone();
-        
+
+    
 
         if args[5]=="dev"
         {

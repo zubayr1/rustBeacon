@@ -5,6 +5,7 @@ use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use tokio::net::tcp::ReadHalf;
 use std::{thread, time};
 use std::fs;
+use tokio::fs::{OpenOptions};
 
 use rand::{rngs::OsRng};
 use schnorrkel::{Keypair,Signature, signing_context, PublicKey};
@@ -80,10 +81,30 @@ pub fn create_keys()
 
 
 #[tokio::main]
-async fn match_tcp_client(address: String, types: String)
+async fn match_tcp_client(address: String, types: String, epoch: i32)
 {
+    let mut file = OpenOptions::new().append(true).open("output.log").await.unwrap();
+
+    let mut text = ["epoch".to_string(), epoch.to_string()].join(": ");
+
+    println!("{}", text);
+
+    file.write_all(text.as_bytes()).await.unwrap();
+    file.write_all(b"\n").await.unwrap();
+
     println!("client");
-    println!("address is {}", address);
+
+    file.write_all("client".as_bytes()).await.unwrap();
+    file.write_all(b"\n").await.unwrap();
+
+    
+    text = ["server address is".to_string(), address.to_string()].join(": ");
+
+    println!("{}", text);
+
+    file.write_all(text.as_bytes()).await.unwrap();
+    file.write_all(b"\n").await.unwrap();
+
     //reading pubkey and sign
     let pubkey = fs::read_to_string("../pubkey.txt").expect("Unable to read file");
     let sign = fs::read_to_string("../sign.txt").expect("Unable to read file");
@@ -92,6 +113,10 @@ async fn match_tcp_client(address: String, types: String)
     let mut stream = TcpStream::connect(address).await.unwrap();
 
     println!("connection done");
+
+
+    file.write_all("connection done".as_bytes()).await.unwrap();
+    file.write_all(b"\n").await.unwrap();
     
     if types == "none"
     {   
@@ -113,9 +138,9 @@ async fn match_tcp_client(address: String, types: String)
 
 
 
-async fn handle_client(ip: String, types: String, port: u32) //be leader: 1 instance
+async fn handle_client(ip: String, types: String, port: u32, epoch: i32) //be leader: 1 instance
 {    
-    match_tcp_client([ip.to_string(), port.to_string()].join(":"), types);   
+    match_tcp_client([ip.to_string(), port.to_string()].join(":"), types, epoch);   
     
 }
 
@@ -125,7 +150,14 @@ async fn handle_client(ip: String, types: String, port: u32) //be leader: 1 inst
 async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: String, port: u32) {
     let listener = TcpListener::bind(["0.0.0.0".to_string(), port.to_string()].join(":")).await.unwrap();
     
-    println!("server at port {}", port);
+    let mut file = OpenOptions::new().append(true).open("output.log").await.unwrap();
+    
+    let text = ["server at port".to_string(), port.to_string()].join(": ");
+
+    println!("{}", text);
+
+    file.write_all(text.as_bytes()).await.unwrap();
+    file.write_all(b"\n").await.unwrap();
     
     let mut count =0;
 
@@ -134,6 +166,10 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
     loop {
         let (mut socket, _) = listener.accept().await.unwrap();
         println!("---continue---");
+
+        
+        file.write_all("---continue---".as_bytes()).await.unwrap();
+        file.write_all(b"\n").await.unwrap();
 
 
         let (reader, mut writer) = socket.split();
@@ -154,8 +190,16 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
                 if line.contains("EOF")
                 {
                     println!("EOF Reached");
+                    
+                    file.write_all("EOF Reached".as_bytes()).await.unwrap();
+                    file.write_all(b"\n").await.unwrap();
+
+
                     writer.write_all(line.as_bytes()).await.unwrap();
                     println!("{}", line);
+                    
+                    file.write_all(line.as_bytes()).await.unwrap();
+                    file.write_all(b"\n").await.unwrap();
                     
                     ip_address_clone = ip_address.clone();
 
@@ -193,6 +237,10 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
                 if public_key.verify(context.bytes(message), &signature).is_ok()
                 {
                     println!("Identity Verified");
+                    
+                    file.write_all("Identity Verified".as_bytes()).await.unwrap();
+                    file.write_all(b"\n").await.unwrap();
+
                     if count<=1
                     {
                         count+=1;
@@ -226,6 +274,10 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
                 else 
                 {
                     println!("Identity Verification Failed. Aborting Broadcasting...");
+
+                    
+                    file.write_all("Identity Verification Failed. Aborting Broadcasting...".as_bytes()).await.unwrap();
+                    file.write_all(b"\n").await.unwrap();
                 }
             }
 
@@ -263,8 +315,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
     for _index in 1..(args[7].parse::<i32>().unwrap()+1)
     {
-        println!("epoch : {}", _index);
-        
+ 
         
         round_robin_count%=total.clone().parse::<i32>().unwrap();       
         round_robin_count+=1;
@@ -289,7 +340,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                         let three_millis = time::Duration::from_millis(3);
                         thread::sleep(three_millis);
 
-                        handle_client(ip,  "none".to_string(), INITIAL_PORT+port_count).await;
+                        handle_client(ip,  "none".to_string(), INITIAL_PORT+port_count, _index).await;
                     }
                                     
                 }
@@ -305,7 +356,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         }
         else 
         {                
-            handle_client("127.0.0.1".to_string(),  "none".to_string(), INITIAL_PORT+port_count).await;
+            handle_client("127.0.0.1".to_string(),  "none".to_string(), INITIAL_PORT+port_count, _index).await;
         }
 
 

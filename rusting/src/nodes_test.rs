@@ -3,6 +3,7 @@ use tokio::net::TcpListener;
 use tokio::net::TcpStream;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use tokio::net::tcp::ReadHalf;
+use tokio::fs::{OpenOptions};
 
 use schnorrkel::{Signature, PublicKey, signing_context};
 
@@ -12,7 +13,14 @@ const INITIAL_PORT: u32 = 7081;
 #[tokio::main]
 async fn handle_server(ip_address: Vec<String>, args: Vec<String>, port: u32) {
 
-    println!("server at port {}", port);
+    let mut file = OpenOptions::new().append(true).open("output.log").await.unwrap();
+
+    let text = ["server at port".to_string(), port.to_string()].join(": ");
+
+    println!("{}", text);
+
+    file.write_all(text.as_bytes()).await.unwrap();
+    file.write_all(b"\n").await.unwrap();
 
     let listener = TcpListener::bind(["127.0.0.1".to_string(), port.to_string()].join(":")).await.unwrap();  
 
@@ -23,6 +31,9 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, port: u32) {
     loop {
         let (mut socket, _) = listener.accept().await.unwrap();
         println!("---continue---");
+
+        file.write_all("---continue---".as_bytes()).await.unwrap();
+        file.write_all(b"\n").await.unwrap();
 
         let arg_ip = args[6].clone();
 
@@ -44,8 +55,16 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, port: u32) {
                 if line.contains("EOF")
                 {
                     println!("EOF Reached");
+
+                    file.write_all("EOF Reached".as_bytes()).await.unwrap();
+                    file.write_all(b"\n").await.unwrap();
+
+
                     writer.write_all(line.as_bytes()).await.unwrap();
                     println!("{}", line);
+
+                    file.write_all(line.as_bytes()).await.unwrap();
+                    file.write_all(b"\n").await.unwrap();
                     
                     ip_address_clone = ip_address.clone();
 
@@ -83,6 +102,11 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, port: u32) {
                 if public_key.verify(context.bytes(message), &signature).is_ok()
                 {
                     println!("Identity Verified");
+
+                    file.write_all("Identity Verified".as_bytes()).await.unwrap();
+                    file.write_all(b"\n").await.unwrap();
+
+
                     if count<=1
                     {
                         count+=1;
@@ -116,6 +140,9 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, port: u32) {
                 else 
                 {
                     println!("Identity Verification Failed. Aborting Broadcasting...");
+
+                    file.write_all("Identity Verification Failed. Aborting Broadcasting...".as_bytes()).await.unwrap();
+                    file.write_all(b"\n").await.unwrap();
                 }
             }
 
