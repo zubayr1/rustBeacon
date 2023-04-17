@@ -11,6 +11,8 @@ use rand::{rngs::OsRng};
 use schnorrkel::{Keypair,Signature, signing_context, PublicKey};
 use schnorrkel::{PUBLIC_KEY_LENGTH, SIGNATURE_LENGTH};
 
+use std::collections::HashSet;
+
 const INITIAL_PORT: u32 = 7081;
 
 pub fn create_keys()
@@ -430,6 +432,9 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             {
                 let mut blacklisted_child = handle_server(ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count, _index, blacklisted.clone());
                 blacklisted.append(&mut blacklisted_child);
+
+                let set : HashSet<_> = blacklisted.drain(..).collect();
+                blacklisted.extend(set.into_iter());
                 println!("-----------------------------{}------------------------------", blacklisted.len());
             }
 
