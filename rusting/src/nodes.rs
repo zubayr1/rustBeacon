@@ -404,13 +404,18 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             {
                 for ip in ip_address_clone.clone() //LEADER SENDS TO EVERY IP
                 {
-                    if ip!=self_ip
+                    let ip_clone = ip.clone();
+                    for blacklisted_ip in blacklisted_clone.clone()
                     {
-                        let three_millis = time::Duration::from_millis(3);
-                        thread::sleep(three_millis);
-
-                        handle_client(ip, self_ip.clone(), "none".to_string(), INITIAL_PORT+port_count, _index, behavior.clone()).await;
+                        if ip_clone.clone()!=self_ip && ip_clone.clone()!=blacklisted_ip
+                        {
+                            let three_millis = time::Duration::from_millis(3);
+                            thread::sleep(three_millis);
+    
+                            handle_client(ip_clone.clone(), self_ip.clone(), "none".to_string(), INITIAL_PORT+port_count, _index, behavior.clone()).await;
+                        }
                     }
+                    
                                     
                 }
                 
