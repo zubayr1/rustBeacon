@@ -81,7 +81,7 @@ pub fn create_keys()
 
 
 #[tokio::main]
-async fn match_tcp_client(address: String, self_ip: String, types: String, epoch: i32, behavior: String)
+async fn match_tcp_client(address: String, types: String, epoch: i32)
 {
     let mut file = OpenOptions::new().append(true).open("output.log").await.unwrap();
 
@@ -120,19 +120,10 @@ async fn match_tcp_client(address: String, self_ip: String, types: String, epoch
     
     if types == "none"
     {   
-        if behavior=="1"
-        {
-            let false_key = "[54, 211, 214, 168, 150, 225, 92, 238, 192, 77, 143, 51, 183, 138, 20, 233, 215, 101, 69, 147, 132, 63, 190, 32, 172, 74, 44, 97, 236, 122, 206, 63]";
-            stream.write_all(false_key.as_bytes()).await.unwrap();
-        }
-        else
-        {
-            stream.write_all(pubkey.as_bytes()).await.unwrap();
-        }
-        
+
+        stream.write_all(pubkey.as_bytes()).await.unwrap();
         stream.write_all(sign.as_bytes()).await.unwrap();
-        let id = [self_ip.to_string(), "messageEOF".to_string()].join(" ");
-        stream.write_all(id.as_bytes()).await.unwrap();
+        stream.write_all(b"messageEOF").await.unwrap();
     }
     else 
     {
@@ -147,16 +138,16 @@ async fn match_tcp_client(address: String, self_ip: String, types: String, epoch
 
 
 
-async fn handle_client(ip: String, self_ip: String, types: String, port: u32, epoch: i32, behavior: String) //be leader: 1 instance
+async fn handle_client(ip: String, types: String, port: u32, epoch: i32, blacklisted: Vec<String>) //be leader: 1 instance
 {    
-    match_tcp_client([ip.to_string(), port.to_string()].join(":"), self_ip, types, epoch, behavior);   
+    match_tcp_client([ip.to_string(), port.to_string()].join(":"), types, epoch);   
     
 }
 
 
 
 #[tokio::main] //3 instances
-async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: String, port: u32, mut blacklisted: Vec<String>) {
+async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: String, port: u32) {
     let listener = TcpListener::bind(["0.0.0.0".to_string(), port.to_string()].join(":")).await.unwrap();
     
     let mut file = OpenOptions::new().append(true).open("output.log").await.unwrap();
@@ -287,10 +278,6 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
                     
                     file.write_all("Identity Verification Failed. Aborting Broadcasting...".as_bytes()).await.unwrap();
                     file.write_all(b"\n").await.unwrap();
-
-                    let id_info: Vec<&str> = line_collection[2].split(" ").collect();
-
-                    blacklisted.push(id_info[0].to_string());
                 }
             }
 
@@ -298,10 +285,8 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
 
             if messageperepochcount>=args[3].clone().parse::<i32>().unwrap()
             {
-              //  return blacklisted;
-              break;
+                break;
             }
-            
             
 
     }
@@ -330,8 +315,6 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
     let blacklisted_clone = blacklisted.clone();
 
-    let behavior = args[8].clone();
-
     for _index in 1..(args[7].parse::<i32>().unwrap()+1)
     {
         
@@ -358,7 +341,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                         let three_millis = time::Duration::from_millis(3);
                         thread::sleep(three_millis);
 
-                        handle_client(ip, self_ip.clone(), "none".to_string(), INITIAL_PORT+port_count, _index, behavior.clone()).await;
+                        handle_client(ip,  "none".to_string(), INITIAL_PORT+port_count, _index, blacklisted_clone.clone()).await;
                     }
                                     
                 }
@@ -366,7 +349,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             }
             else
             {
-                handle_server(ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count, blacklisted_clone.clone());
+                handle_server(ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count);
 
             }
 
@@ -374,15 +357,12 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         }
         else 
         {                
-            handle_client("127.0.0.1".to_string(), self_ip.clone(), "none".to_string(), INITIAL_PORT+port_count, _index, behavior.clone()).await;
+            handle_client("127.0.0.1".to_string(),  "none".to_string(), INITIAL_PORT+port_count, _index, blacklisted_clone.clone()).await;
         }
 
 
-    }
 
-    for i in blacklisted.iter()
-    {
-        println!("{}", i);
+        
     }
     
     
