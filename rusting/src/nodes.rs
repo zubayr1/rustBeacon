@@ -222,9 +222,9 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
                 
                 
             }
-            println!("Identity Verified");
+            
             let line_collection: Vec<&str> = line_clone.split("//").collect();
-
+            println!("{}",line_collection.clone().len());
 
             if line_collection.len()>=3
             {
