@@ -138,7 +138,7 @@ async fn match_tcp_client(address: String, types: String, epoch: i32)
 
 
 
-async fn handle_client(ip: String, types: String, port: u32, epoch: i32) //be leader: 1 instance
+async fn handle_client(ip: String, types: String, port: u32, epoch: i32, blacklisted: Vec<String>) //be leader: 1 instance
 {    
     match_tcp_client([ip.to_string(), port.to_string()].join(":"), types, epoch);   
     
@@ -297,7 +297,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
 
 pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 {  
-    
+    let mut blacklisted = Vec::new();  
     let mut round_robin_count=0;
 
     let total = args[3].clone();
@@ -313,9 +313,10 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
     let mut port_count: u32 = 0;
 
+    let blacklisted_clone = blacklisted.clone();
+
     for _index in 1..(args[7].parse::<i32>().unwrap()+1)
     {
- 
         
         round_robin_count%=total.clone().parse::<i32>().unwrap();       
         round_robin_count+=1;
@@ -340,7 +341,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                         let three_millis = time::Duration::from_millis(3);
                         thread::sleep(three_millis);
 
-                        handle_client(ip,  "none".to_string(), INITIAL_PORT+port_count, _index).await;
+                        handle_client(ip,  "none".to_string(), INITIAL_PORT+port_count, _index, blacklisted_clone.clone()).await;
                     }
                                     
                 }
@@ -356,7 +357,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         }
         else 
         {                
-            handle_client("127.0.0.1".to_string(),  "none".to_string(), INITIAL_PORT+port_count, _index).await;
+            handle_client("127.0.0.1".to_string(),  "none".to_string(), INITIAL_PORT+port_count, _index, blacklisted_clone.clone()).await;
         }
 
 

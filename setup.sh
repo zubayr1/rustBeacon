@@ -10,4 +10,4 @@ fi
 
 # run script
 cd "rusting"
-cargo run -- nok {1} 4 03282129 prod {18.117.92.19} 4
+cargo run -- nok {1} 4 03282129 prod {18.117.92.19} 4 0
