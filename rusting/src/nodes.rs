@@ -413,7 +413,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                 for ip in ip_address_clone.clone() //LEADER SENDS TO EVERY IP
                 {
                                         
-                    if ip.clone()!=self_ip && !blacklisted.contains(&ip) 
+                    if ip.clone()!=self_ip && !blacklisted.contains(&self_ip) 
                     {
                         let three_millis = time::Duration::from_millis(3);
                         thread::sleep(three_millis);
