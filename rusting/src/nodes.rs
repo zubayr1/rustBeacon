@@ -430,7 +430,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             else
             {
                 blacklisted = handle_server(ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count, _index, blacklisted_clone.clone());
-
+                println!("-----------------------------{}------------------------------", blacklisted.len());
             }
 
             
