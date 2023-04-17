@@ -388,7 +388,6 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
     let mut port_count: u32 = 0;
 
-    let blacklisted_clone = blacklisted.clone();
 
     let behavior = args[8].clone();
 
@@ -414,7 +413,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                 for ip in ip_address_clone.clone() //LEADER SENDS TO EVERY IP
                 {
                                         
-                    if ip.clone()!=self_ip && !blacklisted_clone.contains(&ip) 
+                    if ip.clone()!=self_ip && !blacklisted.contains(&ip) 
                     {
                         let three_millis = time::Duration::from_millis(3);
                         thread::sleep(three_millis);
@@ -429,7 +428,8 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             }
             else
             {
-                blacklisted = handle_server(ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count, _index, blacklisted_clone.clone());
+                let mut blacklisted_child = handle_server(ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count, _index, blacklisted.clone());
+                blacklisted.append(&mut blacklisted_child);
                 println!("-----------------------------{}------------------------------", blacklisted.len());
             }
 
