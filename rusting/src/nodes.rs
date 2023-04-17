@@ -122,7 +122,7 @@ async fn match_tcp_client(address: String, self_ip: String, types: String, epoch
     {   
         if behavior=="1"
         {
-            let false_key = "[54, 211, 214, 168, 150, 225, 92, 238, 192, 77, 143, 51, 183, 138, 20, 233, 215, 101, 69, 147, 132, 63, 190, 32, 172, 74, 44, 97, 236, 122, 206, 63]";
+            let false_key = "[54, 211, 214, 168, 150, 225, 92, 238, 192, 77, 143, 51, 183, 138, 20, 233, 215, 101, 69, 147, 132, 63, 190, 32, 172, 74, 44, 97, 236, 122, 206, 63]//";
             stream.write_all(false_key.as_bytes()).await.unwrap();
         }
         else
@@ -224,7 +224,6 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
             }
             
             let line_collection: Vec<&str> = line_clone.split("//").collect();
-            println!("{}",line_collection.clone().len());
 
             if line_collection.len()>=3
             {
