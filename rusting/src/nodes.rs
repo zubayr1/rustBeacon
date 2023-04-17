@@ -177,12 +177,21 @@ async fn handle_client(ip: String, self_ip: String, types: String, port: u32, ep
 
 
 #[tokio::main] //3 instances
-async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: String, port: u32, mut blacklisted: Vec<String>) -> Vec<String>{
+async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: String, port: u32, epoch: i32, mut blacklisted: Vec<String>) -> Vec<String>{
     let listener = TcpListener::bind(["0.0.0.0".to_string(), port.to_string()].join(":")).await.unwrap();
     
     let mut file = OpenOptions::new().append(true).open("output.log").await.unwrap();
+
+
+    let mut text = ["epoch".to_string(), epoch.to_string()].join(": ");
+
+    println!("{}", text);
+
+    file.write_all(text.as_bytes()).await.unwrap();
+    file.write_all(b"\n").await.unwrap();
+
     
-    let text = ["server at port".to_string(), port.to_string()].join(": ");
+    text = ["server at port".to_string(), port.to_string()].join(": ");
 
     println!("{}", text);
 
@@ -420,7 +429,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             }
             else
             {
-                blacklisted = handle_server(ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count, blacklisted_clone.clone());
+                blacklisted = handle_server(ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count, _index, blacklisted_clone.clone());
 
             }
 
