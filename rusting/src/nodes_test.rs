@@ -90,6 +90,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, port: u32) {
     
                 let pubkeybytes: Vec<u8> = serde_json::from_str(pubkeystr).unwrap();
                 let signstrbytes: Vec<u8> = serde_json::from_str(signstr).unwrap();
+
                
                 let public_key: PublicKey = PublicKey::from_bytes(&pubkeybytes).unwrap();
     
@@ -143,6 +144,37 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, port: u32) {
 
                     file.write_all("Identity Verification Failed. Aborting Broadcasting...".as_bytes()).await.unwrap();
                     file.write_all(b"\n").await.unwrap();
+
+
+                    if count<=1
+                    {
+                        count+=1;
+
+                        for ip in ip_address_clone.clone() // Broadcast to everyone
+                        {   
+                            if ip!=arg_ip.clone()
+                            {
+                                let address;
+                                if args[5]=="dev"
+                                {
+                                    address = ["127.0.0.1".to_string(), port.to_string()].join(":");
+                                }
+                                else 
+                                {
+                                    address = [ip.to_string(), port.to_string()].join(":")
+                                }
+            
+                                let mut stream = TcpStream::connect(address).await.unwrap();
+                                
+                                let message = ["Identity Verification Failed".to_string(), "EOF".to_string()].join(" ");
+                                
+                                stream.write_all(message.as_bytes()).await.unwrap();
+            
+                                    
+                            }                                
+                            
+                        }
+                    }
                 }
             }
 

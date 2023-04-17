@@ -114,7 +114,6 @@ async fn match_tcp_client(address: String, self_ip: String, types: String, epoch
 
     println!("connection done");
 
-
     file.write_all("connection done".as_bytes()).await.unwrap();
     file.write_all(b"\n").await.unwrap();
     
@@ -122,7 +121,29 @@ async fn match_tcp_client(address: String, self_ip: String, types: String, epoch
     {   
         if behavior=="1"
         {
-            let false_key = "[54, 211, 214, 168, 150, 225, 92, 238, 192, 77, 143, 51, 183, 138, 20, 233, 215, 101, 69, 147, 132, 63, 190, 32, 172, 74, 44, 97, 236, 122, 206, 63]//";
+            let keypair: Keypair = Keypair::generate_with(OsRng);
+
+            
+            let false_key_bytes: [u8; PUBLIC_KEY_LENGTH] = keypair.public.to_bytes();
+
+            //convert to string for valid utf-8
+            let mut false_key="[".to_string();
+
+            let mut flag=0;
+            for i in false_key_bytes
+            {   if flag==0
+                {
+                    false_key = [false_key.to_string(), i.to_string()].join("");
+                }
+                else {
+                    false_key = [false_key.to_string(), i.to_string()].join(", ");
+                }
+                flag=1;
+                
+            }
+            false_key = [false_key.to_string(), "]".to_string()].join("");
+            false_key = [false_key.to_string(), "//".to_string()].join("");
+
             stream.write_all(false_key.as_bytes()).await.unwrap();
         }
         else
@@ -290,6 +311,38 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
                     let id_info: Vec<&str> = line_collection[2].split(" ").collect();
 
                     blacklisted.push(id_info[0].to_string());
+
+                    if count<=1
+                    {
+                        count+=1;
+
+                        for ip in ip_address_clone.clone() // Broadcast to everyone
+                        {   
+                            if ip!=leader.clone()
+                            {
+                                let address;
+                                if args[5]=="dev"
+                                {
+                                    address = ["127.0.0.1".to_string(), port.to_string()].join(":");
+                                }
+                                else 
+                                {
+                                    address = [ip.to_string(), port.to_string()].join(":")
+                                }
+            
+                                let mut stream = TcpStream::connect(address).await.unwrap();
+
+                                let message = ["Identity Verification Failed".to_string(), id_info[0].to_string().to_string()].join(" ");
+                                
+                                let broadcast_about_false_leader = [message.to_string(), "EOF".to_string()].join(" ");
+                                
+                                stream.write_all(broadcast_about_false_leader.as_bytes()).await.unwrap();
+            
+                                    
+                            }                                
+                            
+                        }
+                    }
                 }
             }
 
