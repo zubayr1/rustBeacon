@@ -407,7 +407,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                     let ip_clone = ip.clone();
                     for blacklisted_ip in blacklisted_clone.clone()
                     {
-                        if ip_clone.clone()!=self_ip && ip_clone.clone()!=blacklisted_ip
+                        if ip_clone.clone()!=self_ip || ip_clone.clone()!=blacklisted_ip
                         {
                             let three_millis = time::Duration::from_millis(3);
                             thread::sleep(three_millis);
