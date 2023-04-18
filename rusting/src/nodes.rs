@@ -1,4 +1,5 @@
 
+use tokio::io::AsyncReadExt;
 use tokio::net::TcpListener;
 use tokio::net::TcpStream;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
@@ -112,12 +113,15 @@ async fn match_tcp_client(address: String, self_ip: String, types: String, epoch
     let sign = fs::read_to_string("../sign.txt").expect("Unable to read file");
 
 
-    let mut stream = TcpStream::connect(address).await.unwrap();
+    let stream = TcpStream::connect(address).await.unwrap();
+
+    let (mut read, mut write) = tokio::io::split(stream); 
 
     println!("connection done");
 
     file.write_all("connection done".as_bytes()).await.unwrap();
     file.write_all(b"\n").await.unwrap();
+    
     
     if types == "none"
     {   
@@ -146,23 +150,31 @@ async fn match_tcp_client(address: String, self_ip: String, types: String, epoch
             false_key = [false_key.to_string(), "]".to_string()].join("");
             false_key = [false_key.to_string(), "//".to_string()].join("");
 
-            stream.write_all(false_key.as_bytes()).await.unwrap();
+            write.write_all(false_key.as_bytes()).await.unwrap();
         }
         else
         {
-            stream.write_all(pubkey.as_bytes()).await.unwrap();
+            write.write_all(pubkey.as_bytes()).await.unwrap();
         }
         
-        stream.write_all(sign.as_bytes()).await.unwrap();
+        write.write_all(sign.as_bytes()).await.unwrap();
         let id = [self_ip.to_string(), "messageEOF".to_string()].join(" ");
-        stream.write_all(id.as_bytes()).await.unwrap();
+        write.write_all(id.as_bytes()).await.unwrap();
     }
     else 
     {
-        stream.write_all(types.as_bytes()).await.unwrap();
-        stream.write_all(types.as_bytes()).await.unwrap();
-        stream.write_all(b"EOF").await.unwrap();
+        write.write_all(types.as_bytes()).await.unwrap();
+        write.write_all(types.as_bytes()).await.unwrap();
+        write.write_all(b"EOF").await.unwrap();
     }
+
+    
+    let mut msg = vec![0; 1024];
+
+    read.read_buf(&mut msg).await.unwrap();
+    println!("{}vvvvvvvvvvvvv", msg[0]);
+    
+
     
         
     

@@ -36,7 +36,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, port: u32) {
         file.write_all(b"\n").await.unwrap();
 
         let arg_ip = args[6].clone();
-
+        
         let (reader, mut writer) = socket.split();
         
         let mut reader: BufReader<ReadHalf> = BufReader::new(reader);
@@ -46,12 +46,12 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, port: u32) {
         let ip_address_clone;
         let line_clone;
 
-
+        
         loop {
-                
+            
                 let _bytes_read: usize = reader.read_line(&mut line).await.unwrap();
                 
-                                
+                println!("{}", line);              
                 if line.contains("EOF")
                 {
                     println!("EOF Reached");
