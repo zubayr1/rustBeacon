@@ -1,6 +1,72 @@
-server at port: 7082epoch: 1
-
+epoch: 1
+server at port: 7082
 client
 server address is: 127.0.0.1:7082
-connection done---continue---
-
+connection done
+---continue---
+EOF Reached
+[252, 122, 181, 200, 243, 45, 235, 248, 33, 168, 91, 108, 18, 98, 220, 78, 86, 245, 60, 45, 253, 175, 242, 222, 15, 80, 221, 102, 108, 4, 131, 37]//[210, 209, 151, 182, 171, 41, 214, 120, 202, 158, 21, 185, 43, 166, 251, 190, 8, 122, 86, 29, 70, 94, 97, 24, 245, 198, 236, 138, 27, 89, 143, 105, 98, 199, 20, 49, 188, 116, 252, 18, 15, 3, 0, 214, 107, 93, 41, 244, 20, 114, 220, 39, 75, 240, 130, 208, 179, 121, 110, 214, 121, 92, 60, 132]//18.117.92.19 messageEOF
+Identity Verification Failed. Aborting Broadcasting...
+epoch: 2
+client
+server address is: 127.0.0.1:7083
+---continue---
+EOF Reached
+Identity Verification Failed EOF
+server at port: 7083
+connection done
+---continue---
+EOF Reached
+[82, 196, 138, 27, 252, 27, 205, 60, 107, 164, 125, 22, 175, 172, 134, 203, 242, 144, 7, 79, 75, 98, 134, 246, 195, 23, 209, 96, 53, 33, 18, 18]//[210, 209, 151, 182, 171, 41, 214, 120, 202, 158, 21, 185, 43, 166, 251, 190, 8, 122, 86, 29, 70, 94, 97, 24, 245, 198, 236, 138, 27, 89, 143, 105, 98, 199, 20, 49, 188, 116, 252, 18, 15, 3, 0, 214, 107, 93, 41, 244, 20, 114, 220, 39, 75, 240, 130, 208, 179, 121, 110, 214, 121, 92, 60, 132]//18.117.92.19 messageEOF
+Identity Verification Failed. Aborting Broadcasting...
+epoch: 3
+client
+server address is: 127.0.0.1:7084
+---continue---
+EOF Reached
+Identity Verification Failed EOF
+server at port: 7084
+connection done
+---continue---
+EOF Reached
+[66, 194, 135, 91, 153, 171, 68, 1, 236, 34, 154, 243, 3, 83, 163, 104, 239, 54, 112, 248, 6, 115, 204, 112, 149, 140, 246, 148, 105, 151, 15, 61]//[210, 209, 151, 182, 171, 41, 214, 120, 202, 158, 21, 185, 43, 166, 251, 190, 8, 122, 86, 29, 70, 94, 97, 24, 245, 198, 236, 138, 27, 89, 143, 105, 98, 199, 20, 49, 188, 116, 252, 18, 15, 3, 0, 214, 107, 93, 41, 244, 20, 114, 220, 39, 75, 240, 130, 208, 179, 121, 110, 214, 121, 92, 60, 132]//18.117.92.19 messageEOF
+Identity Verification Failed. Aborting Broadcasting...
+epoch: 4
+client
+server address is: 127.0.0.1:7085
+---continue---
+EOF Reached
+Identity Verification Failed EOF
+server at port: 7085
+connection done
+---continue---
+EOF Reached
+[98, 145, 205, 86, 232, 205, 216, 61, 185, 251, 245, 31, 122, 56, 165, 93, 30, 22, 144, 111, 171, 63, 116, 228, 239, 131, 159, 235, 135, 182, 181, 30]//[210, 209, 151, 182, 171, 41, 214, 120, 202, 158, 21, 185, 43, 166, 251, 190, 8, 122, 86, 29, 70, 94, 97, 24, 245, 198, 236, 138, 27, 89, 143, 105, 98, 199, 20, 49, 188, 116, 252, 18, 15, 3, 0, 214, 107, 93, 41, 244, 20, 114, 220, 39, 75, 240, 130, 208, 179, 121, 110, 214, 121, 92, 60, 132]//18.117.92.19 messageEOF
+Identity Verification Failed. Aborting Broadcasting...
+epoch: 5
+client
+server address is: 127.0.0.1:7086
+---continue---
+EOF Reached
+Identity Verification Failed EOF
+server at port: 7086
+connection done
+---continue---
+EOF Reached
+[224, 82, 84, 37, 145, 37, 222, 57, 167, 97, 236, 19, 74, 192, 173, 97, 254, 35, 138, 75, 24, 90, 48, 247, 255, 151, 160, 158, 229, 98, 95, 54]//[210, 209, 151, 182, 171, 41, 214, 120, 202, 158, 21, 185, 43, 166, 251, 190, 8, 122, 86, 29, 70, 94, 97, 24, 245, 198, 236, 138, 27, 89, 143, 105, 98, 199, 20, 49, 188, 116, 252, 18, 15, 3, 0, 214, 107, 93, 41, 244, 20, 114, 220, 39, 75, 240, 130, 208, 179, 121, 110, 214, 121, 92, 60, 132]//18.117.92.19 messageEOF
+Identity Verification Failed. Aborting Broadcasting...
+epoch: 6
+client
+server address is: 127.0.0.1:7087
+---continue---
+EOF Reached
+Identity Verification Failed EOF
+server at port: 7087
+connection done
+---continue---
+EOF Reached
+[158, 246, 35, 41, 91, 14, 156, 10, 10, 193, 70, 101, 0, 242, 222, 179, 77, 135, 45, 151, 31, 72, 101, 239, 247, 173, 199, 47, 140, 221, 151, 31]//[210, 209, 151, 182, 171, 41, 214, 120, 202, 158, 21, 185, 43, 166, 251, 190, 8, 122, 86, 29, 70, 94, 97, 24, 245, 198, 236, 138, 27, 89, 143, 105, 98, 199, 20, 49, 188, 116, 252, 18, 15, 3, 0, 214, 107, 93, 41, 244, 20, 114, 220, 39, 75, 240, 130, 208, 179, 121, 110, 214, 121, 92, 60, 132]//18.117.92.19 messageEOF
+Identity Verification Failed. Aborting Broadcasting...
+---continue---
+EOF Reached
+Identity Verification Failed EOF

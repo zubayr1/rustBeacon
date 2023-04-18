@@ -169,13 +169,28 @@ async fn match_tcp_client(address: String, self_ip: String, types: String, epoch
     }
 
     
-    let mut msg = vec![0; 1024];
-
-    read.read_buf(&mut msg).await.unwrap();
-    println!("{}vvvvvvvvvvvvv", msg[0]);
     
+    // let mut line = vec![0; 1024];
+        
 
-    
+                
+    //             let _bytes_read: usize = read.read(&mut line).await.unwrap();
+                
+                                
+    //             if line[0].to_string().contains("EOF")
+    //             {
+    //                 println!("EOF Reached");
+                    
+    //                 file.write_all("EOF Reached".as_bytes()).await.unwrap();
+    //                 file.write_all(b"\n").await.unwrap();
+
+
+
+    //                 line.clear();
+
+    //             }
+                
+                
         
     
 }
@@ -299,8 +314,8 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
 
                         for ip in ip_address_clone.clone() // Broadcast to everyone
                         {   
-                            if ip!=leader.clone() 
-                            {
+                            // if ip!=leader.clone() 
+                            // {
                                 let address;
                                 if args[5]=="dev"
                                 {
@@ -318,7 +333,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
                                 stream.write_all(message.as_bytes()).await.unwrap();
             
                                     
-                            }                                
+                            // }                                
                             
                         }
                     }
@@ -427,7 +442,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                 for ip in ip_address_clone.clone() //LEADER SENDS TO EVERY IP
                 {
                                         
-                    if ip.clone()!=self_ip && !blacklisted.contains(&self_ip) 
+                    if !blacklisted.contains(&self_ip) 
                     {
                         let three_millis = time::Duration::from_millis(3);
                         thread::sleep(three_millis);
