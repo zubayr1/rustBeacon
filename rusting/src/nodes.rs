@@ -1,5 +1,5 @@
 
-use tokio::io::AsyncReadExt;
+// use tokio::io::AsyncReadExt;
 use tokio::net::TcpListener;
 use tokio::net::TcpStream;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
@@ -115,7 +115,7 @@ async fn match_tcp_client(address: String, self_ip: String, types: String, epoch
 
     let stream = TcpStream::connect(address).await.unwrap();
 
-    let (mut read, mut write) = tokio::io::split(stream); 
+    let (_, mut write) = tokio::io::split(stream); 
 
     println!("connection done");
 
@@ -444,6 +444,13 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                                         
                     if !blacklisted.contains(&self_ip) 
                     {
+                        let mut blacklisted_child = handle_server(ip_address.clone(), args_clone.clone(), self_ip.clone(), INITIAL_PORT+port_count, _index, blacklisted.clone());
+                        blacklisted.append(&mut blacklisted_child);
+
+                        let set : HashSet<_> = blacklisted.drain(..).collect();
+                        blacklisted.extend(set.into_iter());
+                        println!("-----------------------------{}------------------------------", blacklisted.len());
+
                         let three_millis = time::Duration::from_millis(3);
                         thread::sleep(three_millis);
 
