@@ -306,7 +306,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, self_ip: Stri
             
                                 let mut stream = TcpStream::connect(address).await.unwrap();
                                 
-                                let message = ["text".to_string(), "EOF".to_string()].join(" ");
+                                let message = ["Re: text".to_string(), "EOF".to_string()].join(" ");
                                 
                                 stream.write_all(message.as_bytes()).await.unwrap();
             
@@ -334,7 +334,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, self_ip: Stri
 
                         for ip in ip_address_clone.clone() // Broadcast to everyone
                         {   
-                            if ip!=self_ip.clone()
+                            if ip!=self_ip.clone() //except itself
                             {
                                 let address;
                                 if args[5]=="dev"
@@ -348,7 +348,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, self_ip: Stri
             
                                 let mut stream = TcpStream::connect(address).await.unwrap();
 
-                                let message = ["Identity Verification Failed".to_string(), id_info[0].to_string().to_string()].join(" ");
+                                let message = ["Re: Identity Verification Failed".to_string(), id_info[0].to_string().to_string()].join(" ");
                                 
                                 let broadcast_about_false_leader = [message.to_string(), "EOF".to_string()].join(" ");
                                 
