@@ -439,42 +439,50 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                     if !blacklisted_clone.contains(&self_ip.clone()) 
                     {
                         
-
-                        let ip_address_clone = ip_address.clone();
-                        let args_clone1 = args_clone.clone();
-                        let self_ip_clone1 = self_ip.clone();
-                        let mut blacklisted_clone1 =blacklisted_clone.clone();
-                        
-
-                        let handle2 = thread::spawn(move || {
-                
-        
-                            let mut blacklisted_child = handle_server("selfserver".to_string(), ip_address_clone.clone(), args_clone1.clone(), self_ip_clone1.clone(), INITIAL_PORT+port_count, _index, blacklisted_clone1.clone());
-                            blacklisted_clone1.append(&mut blacklisted_child);
-
-                            let set : HashSet<_> = blacklisted_clone1.drain(..).collect();
-                            blacklisted_clone1.extend(set.into_iter());
-                            println!("-----------------------------{}------------------------------", blacklisted_clone1.len());
+                        if ip==self_ip.clone()
+                        {
+                            let ip_address_clone = ip_address.clone();
+                            let args_clone1 = args_clone.clone();
+                            let self_ip_clone1 = self_ip.clone();
+                            let mut blacklisted_clone1 =blacklisted_clone.clone();
                             
+    
+                            let handle2 = thread::spawn(move || {
                     
-                        });
-                            
+            
+                                let mut blacklisted_child = handle_server("selfserver".to_string(), ip_address_clone.clone(), args_clone1.clone(), self_ip_clone1.clone(), INITIAL_PORT+port_count, _index, blacklisted_clone1.clone());
+                                blacklisted_clone1.append(&mut blacklisted_child);
+    
+                                let set : HashSet<_> = blacklisted_clone1.drain(..).collect();
+                                blacklisted_clone1.extend(set.into_iter());
+                                println!("-----------------------------{}------------------------------", blacklisted_clone1.len());
+                                
                         
-
-                        let handle1 = thread::spawn(move || {
-                
+                            });
+                                
+                            
+    
+                            let handle1 = thread::spawn(move || {
+                    
+            
+                                let three_millis = time::Duration::from_millis(3);
+                                thread::sleep(three_millis);
         
+                                let future = handle_client(ip.clone(), self_ip_clone.clone(), "none".to_string(), INITIAL_PORT+port_count, _index, behavior_clone.clone());
+        
+                                block_on(future);
+                        
+                            });
+                                
+                            handle2.join().unwrap();
+                            handle1.join().unwrap();
+                        }
+                        else 
+                        {
                             let three_millis = time::Duration::from_millis(3);
                             thread::sleep(three_millis);
-    
-                            let future = handle_client(ip.clone(), self_ip_clone.clone(), "none".to_string(), INITIAL_PORT+port_count, _index, behavior_clone.clone());
-    
-                            block_on(future);
-                    
-                        });
-                            
-                        handle2.join().unwrap();
-                        handle1.join().unwrap();
+                            handle_client(ip.clone(), self_ip_clone.clone(), "none".to_string(), INITIAL_PORT+port_count, _index, behavior_clone.clone()).await;
+                        }
 
                         
 
