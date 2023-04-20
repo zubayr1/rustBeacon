@@ -427,21 +427,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
                     if !blacklisted_clone.contains(&self_ip.clone()) 
                     {
-
-                        let handle1 = thread::spawn(move || {
-                
-        
-                            let three_millis = time::Duration::from_millis(3);
-                            thread::sleep(three_millis);
-    
-                            let future = handle_client(ip.clone(), self_ip_clone1.clone(), "none".to_string(), INITIAL_PORT+port_count, _index, behavior_clone.clone());
-    
-                            block_on(future);
-                    
-                        });
-                            
                         
-                        handle1.join().unwrap();
 
                         let ip_address_clone = ip_address.clone();
                         let args_clone1 = args_clone.clone();
@@ -465,6 +451,20 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                         handle2.join().unwrap();
 
 
+                        let handle1 = thread::spawn(move || {
+                
+        
+                            let three_millis = time::Duration::from_millis(5);
+                            thread::sleep(three_millis);
+    
+                            let future = handle_client(ip.clone(), self_ip_clone1.clone(), "none".to_string(), INITIAL_PORT+port_count, _index, behavior_clone.clone());
+    
+                            block_on(future);
+                    
+                        });
+                            
+                        
+                        handle1.join().unwrap();
 
                         
 
