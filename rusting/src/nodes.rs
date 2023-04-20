@@ -184,7 +184,7 @@ async fn handle_client(ip: String, self_ip: String, types: String, port: u32, ep
 
 
 #[tokio::main] //3 instances
-async fn handle_server(ip_address: Vec<String>, args: Vec<String>, self_ip: String, port: u32, epoch: i32, mut blacklisted: Vec<String>) -> Vec<String>{
+async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<String>, self_ip: String, port: u32, epoch: i32, mut blacklisted: Vec<String>) -> Vec<String>{
     let listener = TcpListener::bind(["0.0.0.0".to_string(), port.to_string()].join(":")).await.unwrap();
     
     let mut file = OpenOptions::new().append(true).open("output.log").await.unwrap();
@@ -363,11 +363,22 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, self_ip: Stri
             }
 
             messageperepochcount+=1;
-            println!("{}", messageperepochcount);
-            if messageperepochcount>=args[3].clone().parse::<i32>().unwrap() || messageperepochcount==1
+            
+            if server_type=="selfserver"
             {
-               return blacklisted;
+                if messageperepochcount==1 
+                {
+                   return blacklisted;
+                }
             }
+            else 
+            {
+                if messageperepochcount>=args[3].clone().parse::<i32>().unwrap() 
+                {
+                    return blacklisted;
+                }
+            }
+            
             
             
 
@@ -438,7 +449,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                         let handle2 = thread::spawn(move || {
                 
         
-                            let mut blacklisted_child = handle_server(ip_address_clone.clone(), args_clone1.clone(), self_ip_clone1.clone(), INITIAL_PORT+port_count, _index, blacklisted_clone1.clone());
+                            let mut blacklisted_child = handle_server("selfserver".to_string(), ip_address_clone.clone(), args_clone1.clone(), self_ip_clone1.clone(), INITIAL_PORT+port_count, _index, blacklisted_clone1.clone());
                             blacklisted_clone1.append(&mut blacklisted_child);
 
                             let set : HashSet<_> = blacklisted_clone1.drain(..).collect();
@@ -476,7 +487,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             }
             else
             {
-                let mut blacklisted_child = handle_server(ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count, _index, blacklisted.clone());
+                let mut blacklisted_child = handle_server("otherserver".to_string(), ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count, _index, blacklisted.clone());
                 blacklisted.append(&mut blacklisted_child);
 
                 let set : HashSet<_> = blacklisted.drain(..).collect();
