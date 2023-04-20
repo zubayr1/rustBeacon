@@ -184,7 +184,7 @@ async fn handle_client(ip: String, self_ip: String, types: String, port: u32, ep
 
 
 #[tokio::main] //3 instances
-async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: String, port: u32, epoch: i32, mut blacklisted: Vec<String>) -> Vec<String>{
+async fn handle_server(ip_address: Vec<String>, args: Vec<String>, self_ip: String, port: u32, epoch: i32, mut blacklisted: Vec<String>) -> Vec<String>{
     let listener = TcpListener::bind(["0.0.0.0".to_string(), port.to_string()].join(":")).await.unwrap();
     
     let mut file = OpenOptions::new().append(true).open("output.log").await.unwrap();
@@ -292,8 +292,8 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
 
                         for ip in ip_address_clone.clone() // Broadcast to everyone
                         {   
-                            // if ip!=leader.clone() 
-                            // {
+                            if ip!=self_ip.clone() 
+                            {
                                 let address;
                                 if args[5]=="dev"
                                 {
@@ -311,7 +311,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
                                 stream.write_all(message.as_bytes()).await.unwrap();
             
                                     
-                            // }                                
+                            }                                
                             
                         }
                     }
@@ -334,8 +334,8 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
 
                         for ip in ip_address_clone.clone() // Broadcast to everyone
                         {   
-                            // if ip!=leader.clone()
-                            // {
+                            if ip!=self_ip.clone()
+                            {
                                 let address;
                                 if args[5]=="dev"
                                 {
@@ -355,7 +355,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
                                 stream.write_all(broadcast_about_false_leader.as_bytes()).await.unwrap();
             
                                     
-                          //  }                                
+                            }                                
                             
                         }
                     }
@@ -422,7 +422,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             {
                 for ip in ip_address_clone.clone() //LEADER SENDS TO EVERY IP
                 {
-                    let self_ip_clone1 = self_ip.clone();
+                    let self_ip_clone = self_ip.clone();
                     let behavior_clone =behavior.clone();
 
                     if !blacklisted_clone.contains(&self_ip.clone()) 
@@ -431,13 +431,14 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
                         let ip_address_clone = ip_address.clone();
                         let args_clone1 = args_clone.clone();
-                        let leader_clone = leader.clone();
+                        let self_ip_clone1 = self_ip.clone();
                         let mut blacklisted_clone1 =blacklisted_clone.clone();
+                        
 
                         let handle2 = thread::spawn(move || {
                 
         
-                            let mut blacklisted_child = handle_server(ip_address_clone.clone(), args_clone1.clone(), leader_clone, INITIAL_PORT+port_count, _index, blacklisted_clone1.clone());
+                            let mut blacklisted_child = handle_server(ip_address_clone.clone(), args_clone1.clone(), self_ip_clone1.clone(), INITIAL_PORT+port_count, _index, blacklisted_clone1.clone());
                             blacklisted_clone1.append(&mut blacklisted_child);
 
                             let set : HashSet<_> = blacklisted_clone1.drain(..).collect();
@@ -455,7 +456,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                             let three_millis = time::Duration::from_millis(3);
                             thread::sleep(three_millis);
     
-                            let future = handle_client(ip.clone(), self_ip_clone1.clone(), "none".to_string(), INITIAL_PORT+port_count, _index, behavior_clone.clone());
+                            let future = handle_client(ip.clone(), self_ip_clone.clone(), "none".to_string(), INITIAL_PORT+port_count, _index, behavior_clone.clone());
     
                             block_on(future);
                     
