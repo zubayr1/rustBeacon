@@ -1,5 +1,4 @@
 
-// use tokio::io::AsyncReadExt;
 use tokio::net::TcpListener;
 use tokio::net::TcpStream;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
@@ -7,6 +6,7 @@ use tokio::net::tcp::ReadHalf;
 use std::{thread, time};
 use std::fs;
 use tokio::fs::{OpenOptions};
+use futures::executor::block_on;
 
 use rand::{rngs::OsRng};
 use schnorrkel::{Keypair,Signature, signing_context, PublicKey};
@@ -169,28 +169,6 @@ async fn match_tcp_client(address: String, self_ip: String, types: String, epoch
     }
 
     
-    
-    // let mut line = vec![0; 1024];
-        
-
-                
-    //             let _bytes_read: usize = read.read(&mut line).await.unwrap();
-                
-                                
-    //             if line[0].to_string().contains("EOF")
-    //             {
-    //                 println!("EOF Reached");
-                    
-    //                 file.write_all("EOF Reached".as_bytes()).await.unwrap();
-    //                 file.write_all(b"\n").await.unwrap();
-
-
-
-    //                 line.clear();
-
-    //             }
-                
-                
         
     
 }
@@ -356,8 +334,8 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
 
                         for ip in ip_address_clone.clone() // Broadcast to everyone
                         {   
-                            if ip!=leader.clone()
-                            {
+                            // if ip!=leader.clone()
+                            // {
                                 let address;
                                 if args[5]=="dev"
                                 {
@@ -377,7 +355,7 @@ async fn handle_server(ip_address: Vec<String>, args: Vec<String>, leader: Strin
                                 stream.write_all(broadcast_about_false_leader.as_bytes()).await.unwrap();
             
                                     
-                            }                                
+                          //  }                                
                             
                         }
                     }
@@ -420,6 +398,9 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
     let behavior = args[8].clone();
 
+    let blacklisted_clone = blacklisted.clone();
+    
+
     for _index in 1..(args[7].parse::<i32>().unwrap()+1)
     {
         
@@ -433,7 +414,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         count+=1;
         port_count+=1;
 
-
+        
         if args[5]=="prod"
         {
 
@@ -441,20 +422,52 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             {
                 for ip in ip_address_clone.clone() //LEADER SENDS TO EVERY IP
                 {
-                                        
-                    if !blacklisted.contains(&self_ip) 
+                    let self_ip_clone1 = self_ip.clone();
+                    let behavior_clone =behavior.clone();
+
+                    if !blacklisted_clone.contains(&self_ip.clone()) 
                     {
-                        let mut blacklisted_child = handle_server(ip_address.clone(), args_clone.clone(), self_ip.clone(), INITIAL_PORT+port_count, _index, blacklisted.clone());
-                        blacklisted.append(&mut blacklisted_child);
 
-                        let set : HashSet<_> = blacklisted.drain(..).collect();
-                        blacklisted.extend(set.into_iter());
-                        println!("-----------------------------{}------------------------------", blacklisted.len());
+                        let handle1 = thread::spawn(move || {
+                
+        
+                            let three_millis = time::Duration::from_millis(3);
+                            thread::sleep(three_millis);
+    
+                            let future = handle_client(ip.clone(), self_ip_clone1.clone(), "none".to_string(), INITIAL_PORT+port_count, _index, behavior_clone.clone());
+    
+                            block_on(future);
+                    
+                        });
+                            
+                        
+                        handle1.join().unwrap();
 
-                        let three_millis = time::Duration::from_millis(3);
-                        thread::sleep(three_millis);
+                        let ip_address_clone = ip_address.clone();
+                        let args_clone1 = args_clone.clone();
+                        let leader_clone = leader.clone();
+                        let mut blacklisted_clone1 =blacklisted_clone.clone();
 
-                        handle_client(ip.clone(), self_ip.clone(), "none".to_string(), INITIAL_PORT+port_count, _index, behavior.clone()).await;
+                        let handle2 = thread::spawn(move || {
+                
+        
+                            let mut blacklisted_child = handle_server(ip_address_clone.clone(), args_clone1.clone(), leader_clone, INITIAL_PORT+port_count, _index, blacklisted_clone1.clone());
+                            blacklisted_clone1.append(&mut blacklisted_child);
+
+                            let set : HashSet<_> = blacklisted_clone1.drain(..).collect();
+                            blacklisted_clone1.extend(set.into_iter());
+                            println!("-----------------------------{}------------------------------", blacklisted_clone1.len());
+                            
+                    
+                        });
+                            
+                        
+                        handle2.join().unwrap();
+
+
+
+                        
+
                     }
                     
                     
