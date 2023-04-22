@@ -334,8 +334,10 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
 
                         for ip in ip_address_clone.clone() // Broadcast to everyone
                         {   
+                            println!("test reach");
                             if ip!=self_ip.clone() //except itself
                             {
+                                println!("{}", ip);
                                 let address;
                                 if args[5]=="dev"
                                 {
@@ -353,8 +355,7 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
                                 let broadcast_about_false_leader = [message.to_string(), "EOF".to_string()].join(" ");
                                 
                                 stream.write_all(broadcast_about_false_leader.as_bytes()).await.unwrap();
-            
-                                println!("test reach");
+                                            
                             }                                
                             
                         }
