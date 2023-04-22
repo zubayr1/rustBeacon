@@ -325,7 +325,7 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
                     file.write_all(b"\n").await.unwrap();
 
                     let id_info: Vec<&str> = line_collection[2].split(" ").collect();
-
+                    println!("sfdggsgsgs{}", id_info[0]);
                     blacklisted.push(id_info[0].to_string());
 
                     if count<=1
