@@ -498,7 +498,6 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
                 let set : HashSet<_> = blacklisted.drain(..).collect();
                 blacklisted.extend(set.into_iter());
-                println!("-----------------------------{}------------------------------", blacklisted.len());
             }
 
             
@@ -509,8 +508,10 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         }
 
 
-    }
+        println!("----------------{}------------------", blacklisted.len());
 
+    }
+    
     for i in blacklisted.iter()
     {
         println!("{}", i);
