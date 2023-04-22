@@ -328,17 +328,14 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
 
                     blacklisted.push(id_info[0].to_string());
 
-                    println!("ddddddddddddd{}", count);
                     if count<=1
                     {
                         count+=1;
 
                         for ip in ip_address_clone.clone() // Broadcast to everyone
                         {   
-                            println!("test reach");
                             if ip!=self_ip.clone() //except itself
                             {
-                                println!("{}", ip);
                                 let address;
                                 if args[5]=="dev"
                                 {
@@ -457,7 +454,6 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
     
                                 let set : HashSet<_> = blacklisted_clone1.drain(..).collect();
                                 blacklisted_clone1.extend(set.into_iter());
-                                println!("-----------------------------{}------------------------------", blacklisted_clone1.len());
                                 
                         
                             });
