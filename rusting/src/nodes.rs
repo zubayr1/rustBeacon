@@ -328,6 +328,7 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
 
                     blacklisted.push(id_info[0].to_string());
 
+                    println!("ddddddddddddd{}", count);
                     if count<=1
                     {
                         count+=1;
