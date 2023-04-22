@@ -354,7 +354,7 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
                                 
                                 stream.write_all(broadcast_about_false_leader.as_bytes()).await.unwrap();
             
-                                    
+                                println!("test reach");
                             }                                
                             
                         }
