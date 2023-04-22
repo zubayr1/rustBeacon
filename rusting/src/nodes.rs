@@ -373,7 +373,7 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
             }
             else 
             {
-                if messageperepochcount>args[3].clone().parse::<i32>().unwrap() +1
+                if messageperepochcount>args[3].clone().parse::<i32>().unwrap() 
                 {
                     return blacklisted;
                 }
@@ -479,7 +479,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                         }
                         else 
                         {
-                            let three_millis = time::Duration::from_millis(5);
+                            let three_millis = time::Duration::from_millis(10);
                             thread::sleep(three_millis);
                             handle_client(ip.clone(), self_ip_clone.clone(), "none".to_string(), INITIAL_PORT+port_count, _index, behavior_clone.clone()).await;
                         }
