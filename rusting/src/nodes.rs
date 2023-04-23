@@ -326,7 +326,7 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
                     file.write_all(b"\n").await.unwrap();
 
                     let id_info: Vec<&str> = line_collection[2].split(" ").collect();
-                    println!("sfdggsgsgs{}", id_info[0]);
+
                     blacklisted.insert(id_info[0].to_string());
 
                     if count<=1
@@ -373,7 +373,7 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
             }
             else 
             {
-                if messageperepochcount>args[3].clone().parse::<i32>().unwrap() 
+                if messageperepochcount>=args[3].clone().parse::<i32>().unwrap() 
                 {
                     return blacklisted;
                 }
@@ -448,8 +448,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                             thread::scope(|s| {
                                 s.spawn(|| {
                                     let blacklisted_child = handle_server("selfserver".to_string(), ip_address_clone.clone(), args_clone1.clone(), self_ip_clone1.clone(), INITIAL_PORT+port_count, _index, blacklisted.clone());
-                                    // I assume `blacklisted_child` will return new items that should get blacklisted,
-                                    // and that need to be added to the original `blacklisted` object.
+                                    
                                     blacklisted.extend(blacklisted_child);
                                 });
                 
