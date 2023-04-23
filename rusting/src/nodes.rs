@@ -366,7 +366,7 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
             
             if server_type=="selfserver"
             {
-                if messageperepochcount==1 
+                if messageperepochcount>=args[3].clone().parse::<i32>().unwrap() 
                 {
                    return blacklisted;
                 }
