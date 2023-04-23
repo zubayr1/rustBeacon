@@ -428,6 +428,12 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         if args[5]=="prod"
         {
 
+            if blacklisted.contains(ip_address_clone[round_robin_count])
+            {
+                round_robin_count+=1;
+            }
+
+
             if round_robin_count==args[2].parse::<i32>().unwrap()
             {
                 for ip in ip_address_clone.clone() //LEADER SENDS TO EVERY IP
@@ -438,7 +444,6 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                     
                     if !blacklisted.clone().contains(&ip.clone())
                     {
-                        println!("{}", ip);
                         if ip==self_ip.clone()
                         {
                             let ip_address_clone = ip_address.clone();
