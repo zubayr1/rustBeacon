@@ -465,7 +465,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
                         }
                         else 
-                        {   println!("{}", ip);
+                        {   println!("dddddddddd{}ddddddddddd", ip);
                             let three_millis = time::Duration::from_millis(3);
                             thread::sleep(three_millis);
                             handle_client(ip.clone(), self_ip_clone.clone(), "none".to_string(), INITIAL_PORT+port_count, _index, behavior_clone.clone()).await;
@@ -473,6 +473,12 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
                         
 
+                    }
+                    else 
+                    {   println!("dddddddddd{}ddddddddddd", ip);
+                        let three_millis = time::Duration::from_millis(3);
+                        thread::sleep(three_millis);
+                        handle_client(ip.clone(), self_ip_clone.clone(), "none".to_string(), INITIAL_PORT+port_count, _index, behavior_clone.clone()).await;
                     }
                     
                     
