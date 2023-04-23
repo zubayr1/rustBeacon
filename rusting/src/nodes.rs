@@ -427,8 +427,8 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         
         if args[5]=="prod"
         {
-
-            if blacklisted.contains(ip_address_clone[round_robin_count])
+            
+            if blacklisted.contains(&leader)
             {
                 round_robin_count+=1;
             }
