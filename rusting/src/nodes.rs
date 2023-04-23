@@ -210,6 +210,12 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
 
     let mut messageperepochcount = 0;
 
+    if server_type== "selfserver"
+    {
+        let three_millis = time::Duration::from_millis(3);
+        thread::sleep(three_millis);
+    }
+
     loop {
         let (mut socket, _) = listener.accept().await.unwrap();
         println!("---continue---");
@@ -368,7 +374,6 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
             {
                 if messageperepochcount==1 
                 {
-                    println!("ddd");
                    return blacklisted;
                 }
             }
