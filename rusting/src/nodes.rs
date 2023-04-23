@@ -366,7 +366,7 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
             
             if server_type=="selfserver"
             {
-                if messageperepochcount>=args[3].clone().parse::<i32>().unwrap() 
+                if messageperepochcount==1 
                 {
                    return blacklisted;
                 }
@@ -435,7 +435,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                     let self_ip_clone = self_ip.clone();
                     let behavior_clone =behavior.clone();
 
-                    if !blacklisted.clone().contains(&self_ip.clone()) 
+                    if !blacklisted.clone().contains(&self_ip.clone()) || blacklisted.clone().contains(&self_ip.clone())
                     {
                         
                         if ip==self_ip.clone()
