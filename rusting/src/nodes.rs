@@ -209,13 +209,7 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
     let mut count =0;
 
     let mut messageperepochcount = 0;
-
-    if server_type== "selfserver"
-    {
-        let three_millis = time::Duration::from_millis(3);
-        thread::sleep(three_millis);
-    }
-
+    
     loop {
         let (mut socket, _) = listener.accept().await.unwrap();
         println!("---continue---");
@@ -471,7 +465,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
                         }
                         else 
-                        {
+                        {   println!("{}", ip);
                             let three_millis = time::Duration::from_millis(3);
                             thread::sleep(three_millis);
                             handle_client(ip.clone(), self_ip_clone.clone(), "none".to_string(), INITIAL_PORT+port_count, _index, behavior_clone.clone()).await;
