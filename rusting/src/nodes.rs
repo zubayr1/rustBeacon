@@ -368,6 +368,7 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
             {
                 if messageperepochcount==1 
                 {
+                    println!("ddd");
                    return blacklisted;
                 }
             }
