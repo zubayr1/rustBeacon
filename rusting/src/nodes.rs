@@ -4,6 +4,7 @@ use tokio::net::TcpStream;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use tokio::net::tcp::ReadHalf;
 use std::{thread, time};
+
 use std::fs;
 use tokio::fs::{OpenOptions};
 use futures::executor::block_on;
@@ -184,7 +185,7 @@ async fn handle_client(ip: String, self_ip: String, types: String, port: u32, ep
 
 
 #[tokio::main] //3 instances
-async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<String>, self_ip: String, port: u32, epoch: i32, mut blacklisted: Vec<String>) -> Vec<String>{
+async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<String>, self_ip: String, port: u32, epoch: i32, mut blacklisted: HashSet<String>) -> HashSet<String>{
     let listener = TcpListener::bind(["0.0.0.0".to_string(), port.to_string()].join(":")).await.unwrap();
     
     let mut file = OpenOptions::new().append(true).open("output.log").await.unwrap();
@@ -326,7 +327,7 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
 
                     let id_info: Vec<&str> = line_collection[2].split(" ").collect();
                     println!("sfdggsgsgs{}", id_info[0]);
-                    blacklisted.push(id_info[0].to_string());
+                    blacklisted.insert(id_info[0].to_string());
 
                     if count<=1
                     {
@@ -389,7 +390,8 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
 
 pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 {  
-    let mut blacklisted = Vec::new();  
+    let mut blacklisted = HashSet::new(); 
+
     let mut round_robin_count=0;
 
     let total = args[3].clone();
@@ -407,9 +409,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
 
     let behavior = args[8].clone();
-
-    let blacklisted_clone = blacklisted.clone();
-    
+  
 
     for _index in 1..(args[7].parse::<i32>().unwrap()+1)
     {
@@ -435,45 +435,35 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                     let self_ip_clone = self_ip.clone();
                     let behavior_clone =behavior.clone();
 
-                    if !blacklisted_clone.contains(&self_ip.clone()) 
+                    if !blacklisted.clone().contains(&self_ip.clone()) 
                     {
                         
                         if ip==self_ip.clone()
                         {
                             let ip_address_clone = ip_address.clone();
                             let args_clone1 = args_clone.clone();
-                            let self_ip_clone1 = self_ip.clone();
-                            let mut blacklisted_clone1 =blacklisted_clone.clone();
-                            
-    
-                            let handle2 = thread::spawn(move || {
-                    
+                            let self_ip_clone1 = self_ip.clone();  
+
+                           
+                            thread::scope(|s| {
+                                s.spawn(|| {
+                                    let blacklisted_child = handle_server("selfserver".to_string(), ip_address_clone.clone(), args_clone1.clone(), self_ip_clone1.clone(), INITIAL_PORT+port_count, _index, blacklisted.clone());
+                                    // I assume `blacklisted_child` will return new items that should get blacklisted,
+                                    // and that need to be added to the original `blacklisted` object.
+                                    blacklisted.extend(blacklisted_child);
+                                });
+                
+                                s.spawn(|| {
+                                    let three_millis = time::Duration::from_millis(3);
+                                    thread::sleep(three_millis);
             
-                                let mut blacklisted_child = handle_server("selfserver".to_string(), ip_address_clone.clone(), args_clone1.clone(), self_ip_clone1.clone(), INITIAL_PORT+port_count, _index, blacklisted_clone1.clone());
-                                blacklisted_clone1.append(&mut blacklisted_child);
-    
-                                let set : HashSet<_> = blacklisted_clone1.drain(..).collect();
-                                blacklisted_clone1.extend(set.into_iter());
-                                
-                        
-                            });
-                                
-                            
-    
-                            let handle1 = thread::spawn(move || {
-                    
+                                    let future = handle_client(ip.clone(), self_ip_clone.clone(), "none".to_string(), INITIAL_PORT+port_count, _index, behavior_clone.clone());
             
-                                let three_millis = time::Duration::from_millis(3);
-                                thread::sleep(three_millis);
-        
-                                let future = handle_client(ip.clone(), self_ip_clone.clone(), "none".to_string(), INITIAL_PORT+port_count, _index, behavior_clone.clone());
-        
-                                block_on(future);
-                        
+                                    block_on(future);
+                                });
                             });
-                                
-                            handle2.join().unwrap();
-                            handle1.join().unwrap();
+
+
                         }
                         else 
                         {
@@ -493,11 +483,9 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             }
             else
             {
-                let mut blacklisted_child = handle_server("otherserver".to_string(), ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count, _index, blacklisted.clone());
-                blacklisted.append(&mut blacklisted_child);
-
-                let set : HashSet<_> = blacklisted.drain(..).collect();
-                blacklisted.extend(set.into_iter());
+                let blacklisted_child = handle_server("otherserver".to_string(), ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count, _index, blacklisted.clone());
+                
+                blacklisted.extend(blacklisted_child.into_iter());
             }
 
             
