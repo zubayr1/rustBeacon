@@ -435,7 +435,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                     let self_ip_clone = self_ip.clone();
                     let behavior_clone =behavior.clone();
 
-                    if !blacklisted.clone().contains(&self_ip.clone())
+                    if !blacklisted.clone().contains(&ip.clone())
                     {
                         
                         if ip==self_ip.clone()
