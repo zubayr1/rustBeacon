@@ -307,7 +307,7 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
             
                                 let mut stream = TcpStream::connect(address).await.unwrap();
                                 
-                                let message = ["Re: text".to_string(), "EOF".to_string()].join(" ");
+                                let message = ["Re: text EOF".to_string(), self_ip.to_string()].join(" ");
                                 
                                 stream.write_all(message.as_bytes()).await.unwrap();
             
@@ -336,7 +336,7 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
                         for ip in ip_address_clone.clone() // Broadcast to everyone
                         {   
                             if ip!=self_ip.clone() //except itself
-                            {   println!("{}", ip);
+                            {
                                 let address;
                                 if args[5]=="dev"
                                 {
