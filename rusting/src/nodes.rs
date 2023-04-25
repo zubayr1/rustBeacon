@@ -292,7 +292,7 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
                         count+=1;
 
                         for ip in ip_address_clone.clone() // Broadcast to everyone
-                        {   println!("{}", ip);
+                        {   
                             if ip!=self_ip.clone() 
                             {
                                 let address;
@@ -336,7 +336,7 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
                         for ip in ip_address_clone.clone() // Broadcast to everyone
                         {   
                             if ip!=self_ip.clone() //except itself
-                            {
+                            {   println!("{}", ip);
                                 let address;
                                 if args[5]=="dev"
                                 {
