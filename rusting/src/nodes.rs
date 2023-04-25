@@ -292,7 +292,6 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
                     if count<=1
                     {
                         count+=1;
-                        println!("//{}", self_ip);
                         for ip in ip_address_clone.clone() // Broadcast to everyone
                         {   
                             if ip!=self_ip.clone() && ip!=id_info[0].to_string().clone()
@@ -433,6 +432,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             if blacklisted.contains(&leader)
             {
                 round_robin_count+=1;
+                println!("{}", round_robin_count);
             }
 
 
