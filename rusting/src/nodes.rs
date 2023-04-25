@@ -453,6 +453,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                            
                             thread::scope(|s| {
                                 s.spawn(|| {
+                                    println!("server and client");
                                     let blacklisted_child = handle_server("selfserver".to_string(), ip_address_clone.clone(), args_clone1.clone(), self_ip_clone1.clone(), INITIAL_PORT+port_count, _index, blacklisted.clone());
                                     
                                     blacklisted.extend(blacklisted_child);
@@ -493,7 +494,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                 
             }
             else
-            {
+            {println!("server only");
                 let blacklisted_child = handle_server("otherserver".to_string(), ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count, _index, blacklisted.clone());
                 
                 blacklisted.extend(blacklisted_child.into_iter());
