@@ -431,7 +431,8 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             
             if blacklisted.contains(&leader)
             {
-                round_robin_count+=1;                
+                round_robin_count+=1;   
+                round_robin_count%=total.clone().parse::<i32>().unwrap();              
             }
             println!("{}", round_robin_count);
 
