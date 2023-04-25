@@ -433,6 +433,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             if blacklisted.contains(&leader)
             {
                 round_robin_count+=1;   
+                count+=1;
                              
             }
             println!("{}", round_robin_count);
