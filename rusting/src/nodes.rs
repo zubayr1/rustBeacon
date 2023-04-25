@@ -287,13 +287,15 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
                     file.write_all("Identity Verified".as_bytes()).await.unwrap();
                     file.write_all(b"\n").await.unwrap();
 
+                    let id_info: Vec<&str> = line_collection[2].split(" ").collect();
+
                     if count<=1
                     {
                         count+=1;
                         println!("//{}", self_ip);
                         for ip in ip_address_clone.clone() // Broadcast to everyone
                         {   
-                            if ip!=self_ip.clone() 
+                            if ip!=self_ip.clone() && ip!=id_info[0].to_string().clone()
                             {
                                 let address;
                                 if args[5]=="dev"
@@ -335,7 +337,7 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
 
                         for ip in ip_address_clone.clone() // Broadcast to everyone
                         {   
-                            if ip!=self_ip.clone() //except itself
+                            if ip!=self_ip.clone() && ip!=id_info[0].to_string().clone()
                             {
                                 let address;
                                 if args[5]=="dev"
