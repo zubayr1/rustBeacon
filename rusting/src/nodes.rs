@@ -425,6 +425,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         count+=1;
         port_count+=1;
 
+        println!("{} {} {}", round_robin_count, count, leader);
         
         if args[5]=="prod"
         {
@@ -432,7 +433,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             if blacklisted.contains(&leader)
             {
                 round_robin_count+=1;   
-                round_robin_count%=total.clone().parse::<i32>().unwrap();              
+                             
             }
             println!("{}", round_robin_count);
 
