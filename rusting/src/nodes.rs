@@ -494,7 +494,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             }
             else
             {
-                let blacklisted_child = handle_server("otherserver".to_string(), ip_address.clone(), args_clone.clone(), leader, INITIAL_PORT+port_count, _index, blacklisted.clone());
+                let blacklisted_child = handle_server("otherserver".to_string(), ip_address.clone(), args_clone.clone(), self_ip.clone(), INITIAL_PORT+port_count, _index, blacklisted.clone());
                 
                 blacklisted.extend(blacklisted_child.into_iter());
             }
