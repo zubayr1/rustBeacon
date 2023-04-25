@@ -292,7 +292,7 @@ async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<S
                         count+=1;
 
                         for ip in ip_address_clone.clone() // Broadcast to everyone
-                        {   
+                        {   println!("{}", ip);
                             if ip!=self_ip.clone() 
                             {
                                 let address;
@@ -449,7 +449,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                             let ip_address_clone = ip_address.clone();
                             let args_clone1 = args_clone.clone();
                             let self_ip_clone1 = self_ip.clone();  
-                            println!("test");
+
                            
                             thread::scope(|s| {
                                 s.spawn(|| {
