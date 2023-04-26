@@ -332,7 +332,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
         count%=total.parse::<usize>().unwrap();       
         
-        let leader = ip_address_clone[count].clone();
+        let mut leader = ip_address_clone[count].clone();
 
         count+=1;
         port_count+=1;
@@ -340,14 +340,12 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         
         if args[5]=="prod"
         {
-            
-            if blacklisted.contains(&leader)
-            {
+            while blacklisted.contains(&leader) {
                 round_robin_count+=1;   
                 count+=1;
-                             
+                leader = ip_address_clone[count].clone();
             }
-
+            
             if round_robin_count==args[2].parse::<i32>().unwrap()
             {
                 for ip in ip_address_clone.clone() //LEADER SENDS TO EVERY IP
