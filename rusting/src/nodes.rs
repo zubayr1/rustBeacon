@@ -422,7 +422,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         }
 
 
-        println!("----------------------------------");
+        println!("--------------{}------------------", blacklisted.len());
 
     }
     
