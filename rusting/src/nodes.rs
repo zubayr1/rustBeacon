@@ -344,9 +344,10 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                 round_robin_count+=1;   
                 count+=1;
                 leader = ip_address_clone[count].clone();
-
-                println!("{} {} {}", round_robin_count, count, leader);
+                
             }
+
+            println!("{} {} {}", round_robin_count, count, leader);
             
             if round_robin_count==args[2].parse::<i32>().unwrap()
             {
