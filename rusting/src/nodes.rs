@@ -425,7 +425,6 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         count+=1;
         port_count+=1;
 
-        println!("{} {} {}", round_robin_count, count, leader);
         
         if args[5]=="prod"
         {
@@ -436,7 +435,6 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                 count+=1;
                              
             }
-            println!("{}", round_robin_count);
 
             if round_robin_count==args[2].parse::<i32>().unwrap()
             {
@@ -511,7 +509,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         }
 
 
-        println!("----------------{}------------------", blacklisted.len());
+        println!("----------------------------------");
 
     }
     
