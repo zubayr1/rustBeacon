@@ -18,6 +18,9 @@ use std::collections::HashSet;
 #[path = "../crypto/schnorrkel.rs"]
 mod schnorrkel; 
 
+#[path = "../probability/create_adv_prob.rs"]
+mod create_adv_prob;
+
 const INITIAL_PORT: u32 = 7081;
 
 pub fn create_keys()
@@ -72,9 +75,17 @@ async fn match_tcp_client(address: String, self_ip: String, types: String, epoch
     {   
         if behavior=="1"
         {
-            let false_key = schnorrkel::create_adversarial_key();
+            if create_adv_prob::create_prob()
+            {
+                let false_key = schnorrkel::create_adversarial_key();
 
-            write.write_all(false_key.as_bytes()).await.unwrap();
+                write.write_all(false_key.as_bytes()).await.unwrap();
+            }
+            else 
+            {
+                write.write_all(pubkey.as_bytes()).await.unwrap();
+            }
+            
         }
         else
         {
@@ -345,7 +356,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                 
                 leader = ip_address_clone[count].clone();
                 count+=1;
-                
+
                 println!("{} {} {}", round_robin_count, count, leader);
                 println!("--");
                 
