@@ -340,6 +340,12 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         
         if args[5]=="prod"
         {
+
+            for i in blacklisted.clone()
+            {
+                println!("{}", i);
+            }
+            println!("[[[[[");
             while blacklisted.contains(&leader) {
                 round_robin_count+=1;   
                 count+=1;
