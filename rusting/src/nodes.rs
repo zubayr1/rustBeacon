@@ -342,9 +342,10 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         {
             while blacklisted.contains(&leader) {
                 round_robin_count+=1;   
-                count+=1;
+                
                 leader = ip_address_clone[count].clone();
-
+                count+=1;
+                
                 println!("{} {} {}", round_robin_count, count, leader);
                 println!("--");
                 
