@@ -348,7 +348,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                 count+=1;
                 count%=total.parse::<usize>().unwrap(); 
 
-                
+
                 leader = ip_address_clone[count].clone();
 
                 println!("{}", leader);
@@ -357,7 +357,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
 
             println!("{} {} {}", round_robin_count, count, leader);
             
-            if round_robin_count==args[2].parse::<i32>().unwrap()
+            if round_robin_count+1==args[2].parse::<i32>().unwrap()
             {
                 for ip in ip_address_clone.clone() //LEADER SENDS TO EVERY IP
                 {
