@@ -75,16 +75,9 @@ async fn match_tcp_client(address: String, self_ip: String, types: String, epoch
     {   
         if behavior=="1"
         {
-            if create_adv_prob::create_prob()
-            {
-                let false_key = schnorrkel::create_adversarial_key();
+            let false_key = schnorrkel::create_adversarial_key();
 
-                write.write_all(false_key.as_bytes()).await.unwrap();
-            }
-            else 
-            {
-                write.write_all(pubkey.as_bytes()).await.unwrap();
-            }
+            write.write_all(false_key.as_bytes()).await.unwrap();
             
         }
         else
@@ -332,7 +325,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
     let mut port_count: u32 = 0;
 
 
-    let behavior = args[8].clone();
+    let mut behavior = args[8].clone();
   
 
     for _index in 1..(args[7].parse::<i32>().unwrap()+1)
@@ -366,6 +359,18 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
             
             if round_robin_count==args[2].parse::<i32>().unwrap()
             {
+                if behavior=="1"
+                {
+                    if create_adv_prob::create_prob()
+                    {
+                        behavior="1".to_string();
+                    }
+                    else 
+                    {
+                        behavior="0".to_string();
+                    }
+                }
+
                 for ip in ip_address_clone.clone() //LEADER SENDS TO EVERY IP
                 {
                     let self_ip_clone = self_ip.clone();
