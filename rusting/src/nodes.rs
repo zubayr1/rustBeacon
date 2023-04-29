@@ -78,13 +78,9 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                 
                 leader = ip_address_clone[count].clone();
                 count+=1;
-
-                println!("{} {} {}", round_robin_count, count, leader);
-                println!("--");
                 
             }
 
-            println!("{} {} {}", round_robin_count, count, leader);
             
             if round_robin_count==args[2].parse::<i32>().unwrap()
             {
@@ -171,7 +167,7 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
         }
 
 
-        println!("--------------{}------------------", blacklisted.len());
+        println!("--------------------------------");
 
     }
     
