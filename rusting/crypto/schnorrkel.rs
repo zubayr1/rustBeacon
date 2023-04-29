@@ -3,7 +3,7 @@ use schnorrkel::{Keypair,Signature, signing_context, PublicKey};
 use schnorrkel::{PUBLIC_KEY_LENGTH, SIGNATURE_LENGTH};
 use std::fs;
 
-pub fn create_keys_schnorrkel()
+pub fn _create_keys_schnorrkel()
 {
     let keypair: Keypair = Keypair::generate_with(OsRng);
 
@@ -68,7 +68,7 @@ pub fn create_keys_schnorrkel()
 }
 
 
-pub fn create_adversarial_key() -> String
+pub fn _create_adversarial_key() -> String
 {
     let keypair: Keypair = Keypair::generate_with(OsRng);
 
@@ -97,7 +97,7 @@ pub fn create_adversarial_key() -> String
 }
 
 
-pub fn verify_schnorrkel_sign(pubkeystr: &str, signstr: &str) -> bool
+pub fn _verify_schnorrkel_sign(pubkeystr: &str, signstr: &str) -> bool
 {
     let pubkeybytes: Vec<u8> = serde_json::from_str(pubkeystr).unwrap();
     let signstrbytes: Vec<u8> = serde_json::from_str(signstr).unwrap();
