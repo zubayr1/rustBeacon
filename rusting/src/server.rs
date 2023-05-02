@@ -12,7 +12,7 @@ mod schnorrkel;
 
 #[tokio::main] //3 instances
 pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<String>, self_ip: String, port: u32, epoch: i32, mut blacklisted: HashSet<String>) -> HashSet<String>{
-    let listener = TcpListener::bind(["0.0.0.0".to_string(), port.to_string()].join(":")).await.unwrap();
+    let listener = TcpListener::bind(["0.0.0.0".to_string(), port.to_string()].join(":")).await.unwrap(); // open connection
     
     let mut file = OpenOptions::new().append(true).open("output.log").await.unwrap();
 
@@ -37,7 +37,7 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
     let mut messageperepochcount = 0;
     
     loop {
-        let (mut socket, _) = listener.accept().await.unwrap();
+        let (mut socket, _) = listener.accept().await.unwrap(); // starts listening
         println!("---continue---");
 
         
@@ -45,7 +45,7 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
         file.write_all(b"\n").await.unwrap();
 
 
-        let (reader, mut writer) = socket.split();
+        let (reader, mut writer) = socket.split(); // tokio socket split to read and write concurrently
         
         let mut reader: BufReader<ReadHalf> = BufReader::new(reader);
         let mut line: String  = String :: new();
@@ -55,12 +55,12 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
         let line_clone;
 
 
-        loop {
+        loop { //loop to get all the data from client until EOF is reached
                 
                 let _bytes_read: usize = reader.read_line(&mut line).await.unwrap();
                 
                                 
-                if line.contains("EOF")
+                if line.contains("EOF") //REACTOR to be used here
                 {
                     println!("EOF Reached");
                     
@@ -95,7 +95,7 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
                 let signstr = line_collection[1];
          
                    
-                if schnorrkel::_verify_schnorrkel_sign(pubkeystr, signstr)
+                if schnorrkel::_verify_schnorrkel_sign(pubkeystr, signstr) // verify schnorr signature 
                 {
                     println!("Identity Verified");
                     
@@ -107,7 +107,7 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
                     if count<=1
                     {
                         count+=1;
-                        for ip in ip_address_clone.clone() // Broadcast to everyone
+                        for ip in ip_address_clone.clone() // Broadcast to everyone. deliver to be used here.
                         {   
                             if ip!=self_ip.clone() && ip!=id_info[0].to_string().clone()
                             {
@@ -149,7 +149,7 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
                     {
                         count+=1;
 
-                        for ip in ip_address_clone.clone() // Broadcast to everyone
+                        for ip in ip_address_clone.clone() // Broadcast to everyone. deliver to be used here.
                         {   
                             if ip!=self_ip.clone() && ip!=id_info[0].to_string().clone()
                             {
@@ -177,7 +177,7 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
                     }
                 }
             }
-
+            // early stop to get out of the loop. Stop when broadcast is done to all nodes. 
             messageperepochcount+=1;
             
             if server_type=="selfserver"
