@@ -22,6 +22,8 @@ fn run_nodes(args: Vec<String>)
     let mut ids: Vec<String> = Vec::new();
     let mut ip_address: Vec<String> = Vec::new();
 
+    // create committee.
+    
     let nodesfile = File::open("./nodes_information.txt").expect("cant open the file"); // get all nodes information from nodes_information file
     let reader = BufReader::new(nodesfile);
     
