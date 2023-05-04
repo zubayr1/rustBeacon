@@ -2,6 +2,7 @@ use tokio::net::TcpListener;
 use tokio::net::TcpStream;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use tokio::net::tcp::ReadHalf;
+use std::{thread, time};
 
 use tokio::fs::{OpenOptions};
 
@@ -107,30 +108,33 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
                     if count<=1
                     {
                         count+=1;
-                        // for ip in ip_address_clone.clone() // Broadcast to everyone. deliver to be used here.
-                        // {   
-                        //     if ip!=self_ip.clone() && ip!=id_info[0].to_string().clone()
-                        //     {
-                        //         let address;
-                        //         if args[5]=="dev"
-                        //         {
-                        //             address = ["127.0.0.1".to_string(), port.to_string()].join(":");
-                        //         }
-                        //         else 
-                        //         {
-                        //             address = [ip.to_string(), port.to_string()].join(":")
-                        //         }
+                        for ip in ip_address_clone.clone() // Broadcast to everyone. deliver to be used here.
+                        {   
+                            if ip!=self_ip.clone() && ip!=id_info[0].to_string().clone()
+                            {
+                                let address;
+                                if args[5]=="dev"
+                                {
+                                    address = ["127.0.0.1".to_string(), port.to_string()].join(":");
+                                }
+                                else 
+                                {
+                                    address = [ip.to_string(), port.to_string()].join(":")
+                                }
+
+                                let three_millis = time::Duration::from_millis(1000);
+                                thread::sleep(three_millis);
             
-                        //         let mut stream = TcpStream::connect(address).await.unwrap();
+                                let mut stream = TcpStream::connect(address).await.unwrap();
                                 
-                        //         let message = ["Re: text EOF".to_string(), self_ip.to_string()].join(" ");
+                                let message = ["Re: text EOF".to_string(), self_ip.to_string()].join(" ");
                                 
-                        //         stream.write_all(message.as_bytes()).await.unwrap();
+                                stream.write_all(message.as_bytes()).await.unwrap();
             
                                     
-                        //     }                                
+                            }                                
                             
-                        // }
+                        }
                     }
                 }
                 else 
@@ -149,31 +153,34 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
                     {
                         count+=1;
 
-                        // for ip in ip_address_clone.clone() // Broadcast to everyone. deliver to be used here.
-                        // {   
-                        //     if ip!=self_ip.clone() && ip!=id_info[0].to_string().clone()
-                        //     {
-                        //         let address;
-                        //         if args[5]=="dev"
-                        //         {
-                        //             address = ["127.0.0.1".to_string(), port.to_string()].join(":");
-                        //         }
-                        //         else 
-                        //         {
-                        //             address = [ip.to_string(), port.to_string()].join(":")
-                        //         }
-            
-                        //         let mut stream = TcpStream::connect(address).await.unwrap();
+                        for ip in ip_address_clone.clone() // Broadcast to everyone. deliver to be used here.
+                        {   
+                            if ip!=self_ip.clone() && ip!=id_info[0].to_string().clone()
+                            {
+                                let address;
+                                if args[5]=="dev"
+                                {
+                                    address = ["127.0.0.1".to_string(), port.to_string()].join(":");
+                                }
+                                else 
+                                {
+                                    address = [ip.to_string(), port.to_string()].join(":")
+                                }
 
-                        //         let message = ["Re: Identity Verification Failed".to_string(), id_info[0].to_string().to_string()].join(" ");
+                                let three_millis = time::Duration::from_millis(1000);
+                                thread::sleep(three_millis);
+            
+                                let mut stream = TcpStream::connect(address).await.unwrap();
+
+                                let message = ["Re: Identity Verification Failed".to_string(), id_info[0].to_string().to_string()].join(" ");
                                 
-                        //         let broadcast_about_false_leader = [message.to_string(), "EOF".to_string()].join(" ");
+                                let broadcast_about_false_leader = [message.to_string(), "EOF".to_string()].join(" ");
                                 
-                        //         stream.write_all(broadcast_about_false_leader.as_bytes()).await.unwrap();
+                                stream.write_all(broadcast_about_false_leader.as_bytes()).await.unwrap();
                                             
-                        //     }                                
+                            }                                
                             
-                        // }
+                        }
                     }
                 }
             }
