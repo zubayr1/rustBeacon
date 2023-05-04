@@ -122,7 +122,7 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
                                     address = [ip.to_string(), port.to_string()].join(":")
                                 }
 
-                                let three_millis = time::Duration::from_millis(1000);
+                                let three_millis = time::Duration::from_millis(10);
                                 thread::sleep(three_millis);
             
                                 let mut stream = TcpStream::connect(address).await.unwrap();
@@ -167,7 +167,7 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
                                     address = [ip.to_string(), port.to_string()].join(":")
                                 }
 
-                                let three_millis = time::Duration::from_millis(1000);
+                                let three_millis = time::Duration::from_millis(10);
                                 thread::sleep(three_millis);
             
                                 let mut stream = TcpStream::connect(address).await.unwrap();
@@ -196,7 +196,7 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
             }
             else 
             {
-                if messageperepochcount>=args[3].clone().parse::<i32>().unwrap() 
+                if messageperepochcount>=args[3].clone().parse::<i32>().unwrap() - 1
                 {
                     return blacklisted;
                 }
