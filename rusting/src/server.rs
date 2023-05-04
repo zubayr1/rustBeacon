@@ -110,7 +110,7 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
                         count+=1;
                         for ip in ip_address_clone.clone() // Broadcast to everyone. deliver to be used here.
                         {   
-                            if ip!=self_ip.clone() && ip!=id_info[0].to_string().clone()
+                            if ip!=self_ip.clone() 
                             {
                                 let address;
                                 if args[5]=="dev"
@@ -155,7 +155,7 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
 
                         for ip in ip_address_clone.clone() // Broadcast to everyone. deliver to be used here.
                         {   
-                            if ip!=self_ip.clone() && ip!=id_info[0].to_string().clone()
+                            if ip!=self_ip.clone() 
                             {
                                 let address;
                                 if args[5]=="dev"
