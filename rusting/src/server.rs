@@ -180,20 +180,20 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
             // early stop to get out of the loop. Stop when broadcast is done to all nodes. 
             messageperepochcount+=1;
             
-            // if server_type=="selfserver"
-            // {
-            //     if messageperepochcount==1 
-            //     {
-            //        return blacklisted;
-            //     }
-            // }
-            // else 
-            // {
-            //     if messageperepochcount>=args[3].clone().parse::<i32>().unwrap()
-            //     {
-            //         return blacklisted;
-            //     }
-            // }
+            if server_type=="selfserver"
+            {
+                if messageperepochcount==1 
+                {
+                   return blacklisted;
+                }
+            }
+            else 
+            {
+                if messageperepochcount>=args[3].clone().parse::<i32>().unwrap()
+                {
+                    return blacklisted;
+                }
+            }
             
             
             
