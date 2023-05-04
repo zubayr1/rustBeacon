@@ -121,9 +121,7 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
                                 {
                                     address = [ip.to_string(), port.to_string()].join(":")
                                 }
-
-                                let three_millis = time::Duration::from_millis(2000);
-                                thread::sleep(three_millis);
+                               
             
                                 let mut stream = TcpStream::connect(address).await.unwrap();
                                 
@@ -166,10 +164,7 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
                                 {
                                     address = [ip.to_string(), port.to_string()].join(":")
                                 }
-
-                                let three_millis = time::Duration::from_millis(2000);
-                                thread::sleep(three_millis);
-            
+                                          
                                 let mut stream = TcpStream::connect(address).await.unwrap();
 
                                 let message = ["Re: Identity Verification Failed".to_string(), id_info[0].to_string().to_string()].join(" ");
