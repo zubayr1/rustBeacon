@@ -189,14 +189,14 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
             
             if server_type=="selfserver"
             {
-                if messageperepochcount>=args[3].clone().parse::<i32>().unwrap() 
+                if messageperepochcount>=args[3].clone().parse::<i32>().unwrap() + 1
                 {
                    return blacklisted;
                 }
             }
             else 
             {
-                if messageperepochcount>=args[3].clone().parse::<i32>().unwrap()
+                if messageperepochcount>=args[3].clone().parse::<i32>().unwrap() + 1
                 {
                     return blacklisted;
                 }
