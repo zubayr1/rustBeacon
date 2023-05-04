@@ -110,7 +110,7 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
                         count+=1;
                         for ip in ip_address_clone.clone() // Broadcast to everyone. deliver to be used here.
                         {   
-                            if ip!=self_ip.clone() 
+                            if ip!=self_ip.clone() && ip!=id_info[0].to_string().clone()
                             {
                                 let address;
                                 if args[5]=="dev"
@@ -122,7 +122,7 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
                                     address = [ip.to_string(), port.to_string()].join(":")
                                 }
 
-                                let three_millis = time::Duration::from_millis(1000);
+                                let three_millis = time::Duration::from_millis(2000);
                                 thread::sleep(three_millis);
             
                                 let mut stream = TcpStream::connect(address).await.unwrap();
@@ -155,7 +155,7 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
 
                         for ip in ip_address_clone.clone() // Broadcast to everyone. deliver to be used here.
                         {   
-                            if ip!=self_ip.clone() 
+                            if ip!=self_ip.clone() && ip!=id_info[0].to_string().clone()
                             {
                                 let address;
                                 if args[5]=="dev"
@@ -167,7 +167,7 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
                                     address = [ip.to_string(), port.to_string()].join(":")
                                 }
 
-                                let three_millis = time::Duration::from_millis(1000);
+                                let three_millis = time::Duration::from_millis(2000);
                                 thread::sleep(three_millis);
             
                                 let mut stream = TcpStream::connect(address).await.unwrap();
