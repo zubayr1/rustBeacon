@@ -122,14 +122,14 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
                                     address = [ip.to_string(), port.to_string()].join(":")
                                 }
 
-                                let three_millis = time::Duration::from_millis(1000);
-                                thread::sleep(three_millis);
+                                // let three_millis = time::Duration::from_millis(1000);
+                                // thread::sleep(three_millis);
             
-                                let mut stream = TcpStream::connect(address).await.unwrap();
+                                // let mut stream = TcpStream::connect(address).await.unwrap();
                                 
-                                let message = ["Re: text EOF".to_string(), self_ip.to_string()].join(" ");
+                                // let message = ["Re: text EOF".to_string(), self_ip.to_string()].join(" ");
                                 
-                                stream.write_all(message.as_bytes()).await.unwrap();
+                                // stream.write_all(message.as_bytes()).await.unwrap();
             
                                     
                             }                                
@@ -167,16 +167,16 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
                                     address = [ip.to_string(), port.to_string()].join(":")
                                 }
 
-                                let three_millis = time::Duration::from_millis(1000);
-                                thread::sleep(three_millis);
+                                // let three_millis = time::Duration::from_millis(1000);
+                                // thread::sleep(three_millis);
             
-                                let mut stream = TcpStream::connect(address).await.unwrap();
+                                // let mut stream = TcpStream::connect(address).await.unwrap();
 
-                                let message = ["Re: Identity Verification Failed".to_string(), id_info[0].to_string().to_string()].join(" ");
+                                // let message = ["Re: Identity Verification Failed".to_string(), id_info[0].to_string().to_string()].join(" ");
                                 
-                                let broadcast_about_false_leader = [message.to_string(), "EOF".to_string()].join(" ");
+                                // let broadcast_about_false_leader = [message.to_string(), "EOF".to_string()].join(" ");
                                 
-                                stream.write_all(broadcast_about_false_leader.as_bytes()).await.unwrap();
+                                // stream.write_all(broadcast_about_false_leader.as_bytes()).await.unwrap();
                                             
                             }                                
                             
