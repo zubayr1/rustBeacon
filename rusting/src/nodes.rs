@@ -33,7 +33,7 @@ pub fn create_keys() // schnorr key generation
 
 async fn handle_client(ip: String, self_ip: String, types: String, port: u32, epoch: i32, behavior: String) // clinet: initiating data sending.
 {    
-    client::match_tcp_client([ip.to_string(), port.to_string()].join(":"), self_ip, types, epoch, behavior);   
+    newclient::match_tcp_client([ip.to_string(), port.to_string()].join(":"), self_ip, types, epoch, behavior);   
     
 }
 
@@ -80,9 +80,9 @@ pub async fn initiate(ip_address: Vec<String>, args: Vec<String>)
                         
                         thread::scope(|s| { // tokio thread, since leader is both client and server
                             s.spawn(|| {
-                                let blacklisted_child = server::handle_server("otherserver".to_string(), ip_address_clone.clone(), args_clone1.clone(), self_ip_clone1.clone(), INITIAL_PORT+port_count, _index, blacklisted.clone());
+                                 newserver::handle_server("otherserver".to_string(), ip_address_clone.clone(), args_clone1.clone(), self_ip_clone1.clone(), INITIAL_PORT+port_count, _index, blacklisted.clone());
                                 
-                                blacklisted.extend(blacklisted_child);
+                                // blacklisted.extend(blacklisted_child);
                             });
             
                             s.spawn(|| {
