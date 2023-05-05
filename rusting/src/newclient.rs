@@ -21,6 +21,7 @@ pub async fn match_tcp_client(address: String, self_ip: String, types: String, e
 
         let three_millis = time::Duration::from_millis(3);
         thread::sleep(three_millis);
+        
 
     let mut stream = TcpStream::connect(address).await.unwrap();
 
