@@ -56,13 +56,13 @@ pub async fn match_tcp_client(address: String, self_ip: String, types: String, e
     file.write_all("connection done".as_bytes()).await.unwrap();
     file.write_all(b"\n").await.unwrap();
     
-    
+    println!("aaa");
     if types == "none" // types == "none": first time communication
     {   
         if behavior=="1" // if 1: can act as adversary and send false signature
         {
             let false_key = schnorrkel::_create_adversarial_key();
-
+            println!("aaa");
             write.write_all(false_key.as_bytes()).await.unwrap();
             
         }
