@@ -44,11 +44,11 @@ pub async fn match_tcp_client(address: String, self_ip: String, types: String, e
 
     let addressclone = address.clone();
 
-    
-    // while TcpStream::connect(addressclone.clone()).await.is_err() {
-    //     let three_millis = time::Duration::from_millis(3);
-    //     thread::sleep(three_millis);
-    // }
+    if !address.contains(&self_ip){
+    while TcpStream::connect(addressclone.clone()).await.is_err() {
+        let three_millis = time::Duration::from_millis(3);
+        thread::sleep(three_millis);
+    }
     if TcpStream::connect(addressclone.clone()).await.is_ok(){
 
     let stream = TcpStream::connect(address).await.unwrap(); 
@@ -89,13 +89,6 @@ pub async fn match_tcp_client(address: String, self_ip: String, types: String, e
     }
 
 }
-else
-{
-        let three_millis = time::Duration::from_millis(3);
-        thread::sleep(three_millis);
-
-        match_tcp_client(address, self_ip, types, epoch, behavior);
-}
         
-    
+}
 }
