@@ -29,7 +29,7 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
                 
         let _bytes_read: usize = reader.read_line(&mut line).await.unwrap();
         
-                       
+                       println!("{}", line);
         if line.contains("EOF") //REACTOR to be used here
         {
             println!("EOF Reached");
