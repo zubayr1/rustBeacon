@@ -10,7 +10,13 @@ use std::collections::HashSet;
 
 #[tokio::main] //3 instances
 pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: Vec<String>, self_ip: String, port: u32, epoch: i32, mut blacklisted: HashSet<String>) {
-    let listener = TcpListener::bind(["0.0.0.0".to_string(), port.to_string()].join(":")).await.unwrap(); // open connection
+    while TcpListener::bind(["0.0.0.0".to_string(), port.to_string()].join(":")).await.is_err()
+    {
+        let three_millis = time::Duration::from_millis(3);
+        thread::sleep(three_millis);
+    }
+
+    let listener = TcpListener::bind(["0.0.0.0".to_string(), port.to_string()].join(":")).await.unwrap();
 
     let (mut socket, _) = listener.accept().await.unwrap(); // starts listening
 
