@@ -62,7 +62,7 @@ pub async fn match_tcp_client(address: String, self_ip: String, types: String, e
         if behavior=="1" // if 1: can act as adversary and send false signature
         {
             let false_key = schnorrkel::_create_adversarial_key();
-            println!("aaa");
+            println!("bbb");
             write.write_all(false_key.as_bytes()).await.unwrap();
             
         }
@@ -74,6 +74,8 @@ pub async fn match_tcp_client(address: String, self_ip: String, types: String, e
         write.write_all(sign.as_bytes()).await.unwrap(); // write signature to server.
         let id = [self_ip.to_string(), "messageEOF".to_string()].join(" ");
         write.write_all(id.as_bytes()).await.unwrap();
+
+        println!("ccc");
     } 
     else // next communication. REACTOR to be used here
     {
