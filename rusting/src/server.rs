@@ -40,7 +40,6 @@ pub async fn handle_server(server_type: String, ip_address: Vec<String>, args: V
    loop {
         let (mut socket, _) = listener.accept().await.unwrap(); // starts listening
         println!("---continue---");
-        println!("{:?}", socket.local_addr());
         
         file.write_all("---continue---".as_bytes()).await.unwrap();
         file.write_all(b"\n").await.unwrap();

@@ -62,6 +62,11 @@ pub async fn match_tcp_client(address: String, self_ip: String, types: String, e
     file.write_all(b"\n").await.unwrap();
     
     println!("aaa{}", addressclone);
+
+    let three_millis = time::Duration::from_millis(30);
+        thread::sleep(three_millis);
+
+
     if types == "none" // types == "none": first time communication
     {   
         if behavior=="1" // if 1: can act as adversary and send false signature
