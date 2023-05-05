@@ -44,17 +44,13 @@ pub async fn match_tcp_client(address: String, self_ip: String, types: String, e
 
     let addressclone = address.clone();
 
-    let mut connectionestablisted = false;
-
-    if connectionestablisted==false
-    {
-        while TcpStream::connect(addressclone.clone()).await.is_err() {
-            let three_millis = time::Duration::from_millis(3);
-            thread::sleep(three_millis);
-        }
-        connectionestablisted = true;
-    }
     
+    while TcpStream::connect(addressclone.clone()).await.is_err() {
+        let three_millis = time::Duration::from_millis(3);
+        thread::sleep(three_millis);
+    }
+    if TcpStream::connect(addressclone.clone()).await.is_ok(){
+
     let stream = TcpStream::connect(address).await.unwrap(); 
 
     let (_, mut write) = tokio::io::split(stream); 
@@ -92,7 +88,7 @@ pub async fn match_tcp_client(address: String, self_ip: String, types: String, e
         write.write_all(b"EOF").await.unwrap();
     }
 
-    
+}
         
     
 }
