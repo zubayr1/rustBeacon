@@ -43,10 +43,18 @@ pub async fn match_tcp_client(address: String, self_ip: String, types: String, e
 
 
     let addressclone = address.clone();
-    while TcpStream::connect(addressclone.clone()).await.is_err() {
-        let three_millis = time::Duration::from_millis(3);
-        thread::sleep(three_millis);
+
+    let mut connectionestablisted = false;
+
+    if !connectionestablisted
+    {
+        while TcpStream::connect(addressclone.clone()).await.is_err() {
+            let three_millis = time::Duration::from_millis(3);
+            thread::sleep(three_millis);
+        }
+        connectionestablisted = true;
     }
+    
     let stream = TcpStream::connect(address).await.unwrap(); 
 
     let (_, mut write) = tokio::io::split(stream); 
